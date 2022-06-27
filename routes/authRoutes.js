@@ -9,7 +9,7 @@ const {
 } = require("../controller/authController");
 
 router.route("/auth/user/register").post(userRegister);
-router.route("/superAdminregister").post(superAdminRegister);
+router.route("/auth/superAdminregister").post(superAdminRegister);
 router.route("/deactivate/:id").post(deactivateUser);
 
 router.route("/login").get((req, res, next) => {

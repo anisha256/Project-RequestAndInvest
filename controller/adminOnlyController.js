@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 const userList = async (req, res, next) => {
-  const data = await User.find({ typeOfUser: "User" });
+  const data = await User.find({ role: "User" });
   console.log(data);
   res.status(200).json({
     success: true,
@@ -10,7 +10,7 @@ const userList = async (req, res, next) => {
   console.log(data);
 };
 const adminList = async (req, res, next) => {
-  const data = await User.find({ typeOfUser: "Admin" });
+  const data = await User.find({ role: "Admin" });
   console.log(data);
   res.status(200).json({
     success: true,

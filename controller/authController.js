@@ -4,13 +4,13 @@ const crypto = require("crypto");
 
 const superAdminRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
-  const typeOfUser = "SuperAdmin";
+  const role = "SuperAdmin";
   try {
     const user = await User.create({
       username,
       email,
       password,
-      typeOfUser,
+      role,
     });
     getToken(user, 201, res);
   } catch (error) {
@@ -18,13 +18,13 @@ const superAdminRegister = async (req, res, next) => {
   }
 };
 const userRegister = async (req, res, next) => {
-  const { username, email, password, typeOfUser } = req.body;
+  const { username, email, password, role } = req.body;
   try {
     const user = await User.create({
       username,
       email,
       password,
-      typeOfUser,
+      role,
     });
     getToken(user, 201, res);
   } catch (error) {
@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorResponse("Invalid Credentials", 401));
     }
-    if (user.typeOfUser) {
+    if (user.role == "Admin" || user.role == "User") {
       getToken(user, 200, res);
     } else {
       return next(new ErrorResponse("Not Registered", 400));
@@ -82,9 +82,8 @@ const getToken = (user, statusCode, res) => {
   return res.status(statusCode).json({
     success: true,
     token,
-    role: user.typeOfUser,
+    role: user.role,
     email: user.email,
-    // user,
   });
 };
 

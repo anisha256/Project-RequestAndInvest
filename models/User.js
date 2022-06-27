@@ -29,14 +29,14 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  typeOfUser: {
+  role: {
     type: String,
     default: 'User',
   },
-  status: {
-    type: Boolean,
-    default: true,
-  },
+  // status: {
+  //   type: Boolean,
+  //   default: true,
+  // },
   isDeactivated: {
     type: Boolean,
     default: false,

@@ -6,13 +6,13 @@ const adminRegister = async (req, res, next) => {
   if (!username || !email || !password) {
     return next(new ErrorResponse("Please Input all field", 400));
   }
-  const typeOfUser = "Admin";
+  const role = "Admin";
   try {
     const user = await User.create({
       username,
       email,
       password,
-      typeOfUser,
+      role,
     });
     res.status(200).json({
       success: true,

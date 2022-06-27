@@ -27,7 +27,7 @@ exports.adminOnlyAccess = async (req, res, next) => {
       return next(new ErrorResponse("No user found with this id", 404));
     }
     // console.log(user);
-    if (user.typeOfUser !== "Admin") {
+    if (user.role !== "Admin") {
       console.log("Non admin access.");
       return next(
         new ErrorResponse("Not authorized to access this route", 401)
@@ -66,7 +66,7 @@ exports.superAdminAccess = async (req, res, next) => {
       return next(new ErrorResponse("No user found with this id", 404));
     }
     // console.log(user);
-    if (user.typeOfUser !== "SuperAdmin") {
+    if (user.role !== "SuperAdmin") {
       console.log("Non superadmin access.");
       return next(
         new ErrorResponse("Not authorized to access this route", 401)
