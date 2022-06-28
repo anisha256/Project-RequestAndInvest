@@ -33,10 +33,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'User',
   },
-  // status: {
-  //   type: Boolean,
-  //   default: true,
-  // },
   isDeactivated: {
     type: Boolean,
     default: false,

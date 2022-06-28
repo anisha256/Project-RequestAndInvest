@@ -3,9 +3,14 @@ const User = require("../models/User");
 const getProfiles = async (req, res, next) => {
   try {
     const profiles = await User.find();
-    res.status(200).json(profiles);
+    res.status(200).json({
+      status: true,
+      statusCode: 200,
+      data: profiles,
+    });
   } catch (error) {
     res.status(404).json({
+      status: false,
       message: error.message,
     });
   }
@@ -20,7 +25,12 @@ const editProfile = async (req, res, next) => {
         new: true,
       }
     );
-    res.status(200).json(updatedProfile);
+    res.status(200).json({
+        status: true,
+        statusCode: 200,
+        data: updatedProfile,
+
+    });
   } catch (error) {
     res.status(404).json({
       message: "Profile not found",

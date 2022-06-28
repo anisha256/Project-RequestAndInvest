@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
-
+const sendResponse = require("../utils/response")
 const adminRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -15,9 +15,9 @@ const adminRegister = async (req, res, next) => {
       role,
     });
     res.status(200).json({
-      success: true,
-      data: "admin added",
-      user,
+      message: "admin added",
+      statusCode:200,
+      data:[{email:user.email,role:user.role}]
     });
   } catch (error) {
     next(error);
