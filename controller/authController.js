@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const User = require('../models/User');
+const Project = require('../models/Project');
 const ErrorResponse = require('../utils/errorResponse');
 
 const getToken = (user) => {
@@ -102,4 +103,32 @@ const deactivateUser = async (req, res) => {
   }
 };
 
-module.exports = { superAdminRegister, userRegister, login, deactivateUser };
+const sendMail = async (req, res, next) => {
+  try {
+    const project = await Project.find({ isGranted: true });
+    const grantedEmails = [];
+
+    const emails = project.email;
+    console.log(emails);
+    res.status(200).json({
+      status: true,
+      statusCode: 200,
+      // data: 'Email is sent successfully',
+      data: emails,
+    });
+  } catch (error) {
+    res.status(404).json({
+      data: 'not found',
+    });
+  }
+
+  next();
+};
+
+module.exports = {
+  superAdminRegister,
+  userRegister,
+  login,
+  deactivateUser,
+  sendMail,
+};

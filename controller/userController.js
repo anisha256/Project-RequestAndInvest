@@ -59,6 +59,12 @@ const createProjectDraft = async (req, res, next) => {
     projectVision,
     additionalInfo,
   } = req.body;
+  const linkedinProfileArray = [];
+  if (linkedinProfiles) {
+    linkedinProfiles.split(',').forEach((linkedinProfile) => {
+      linkedinProfileArray.push(linkedinProfile.trim());
+    });
+  }
   try {
     const draft = await Project.create({
       firstName,
@@ -67,7 +73,7 @@ const createProjectDraft = async (req, res, next) => {
       telegramUsername,
       fullTimeWorker,
       teamExperience,
-      linkedinProfiles,
+      linkedinProfiles: linkedinProfileArray,
       websiteUrl,
       country,
       city,
@@ -78,12 +84,11 @@ const createProjectDraft = async (req, res, next) => {
       additionalInfo,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Draft has been created',
       statusCode: 200,
       data: draft,
     });
-    return next();
   } catch (error) {
     return next(error);
   }
@@ -164,6 +169,12 @@ const requestProject = async (req, res, next) => {
     projectVision,
     additionalInfo,
   } = req.body;
+  const linkedinProfileArray = [];
+  if (linkedinProfiles) {
+    linkedinProfiles.split(',').forEach((linkedinProfile) => {
+      linkedinProfileArray.push(linkedinProfile.trim());
+    });
+  }
   try {
     const project = await Project.create({
       firstName,
@@ -172,7 +183,7 @@ const requestProject = async (req, res, next) => {
       telegramUsername,
       fullTimeWorker,
       teamExperience,
-      linkedinProfiles,
+      linkedinProfiles: linkedinProfileArray,
       websiteUrl,
       country,
       city,

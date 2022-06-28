@@ -103,5 +103,4 @@ module.exports = {
   listAllProjectRequests,
   listRejectedProjects,
   listAcceptedProjects,
-  // sendEmail,
 };

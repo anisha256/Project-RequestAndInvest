@@ -7,6 +7,7 @@ const {
   login,
   superAdminRegister,
   deactivateUser,
+  sendMail,
 } = require('../controller/authController');
 
 router.route('/auth/user/register').post(userRegister);
@@ -19,5 +20,6 @@ router.route('/login').get((req, res) => {
   });
 });
 router.route('/login').post(login);
+router.route('/send/mail').post(sendMail);
 
 module.exports = router;

@@ -31,10 +31,8 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: [true, 'please enter teamExp'],
     },
-    linkedinProfiles: {
-      type: String,
-      required: true,
-    },
+    linkedinProfiles: [{ type: String }],
+
     websiteUrl: {
       type: String,
       required: true,
