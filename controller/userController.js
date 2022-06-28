@@ -1,3 +1,4 @@
+const Project = require('../models/Project');
 const User = require('../models/User');
 
 const getProfiles = async (req, res, next) => {
@@ -39,4 +40,51 @@ const editProfile = async (req, res, next) => {
   next();
 };
 
-module.exports = { getProfiles, editProfile };
+const requestProject = async (req, res, next) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    telegramUsername,
+    fullTimeWorker,
+    teamExperience,
+    linkedinProfiles,
+    websiteUrl,
+    country,
+    city,
+    projectName,
+    description,
+    projectType,
+    projectVision,
+    additionalInfo,
+  } = req.body;
+  try {
+    const project = await Project.create({
+      firstName,
+      lastName,
+      email,
+      telegramUsername,
+      fullTimeWorker,
+      teamExperience,
+      linkedinProfiles,
+      websiteUrl,
+      country,
+      city,
+      projectName,
+      description,
+      projectType,
+      projectVision,
+      additionalInfo,
+    });
+    res.status(200).json({
+      message: 'Transaction has been submitted',
+      statusCode: 200,
+      data: project,
+    });
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { getProfiles, editProfile, requestProject };
