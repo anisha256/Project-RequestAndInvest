@@ -67,10 +67,20 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isRequested: {
+    isDraft: {
       type: Boolean,
       required: true,
       default: true,
+    },
+    isEdited: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isRequested: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     isGranted: {
       type: Boolean,
