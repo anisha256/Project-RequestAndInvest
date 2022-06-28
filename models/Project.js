@@ -77,6 +77,11 @@ const projectSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    isRejected: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
 
   {

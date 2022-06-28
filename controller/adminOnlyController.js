@@ -35,13 +35,63 @@ const grantProject = async (req, res) => {
     });
   }
 };
+const rejectProject = async (req, res) => {
+  const project = await Project.findById(req.params.id);
+
+  if (project.isGranted === false) {
+    try {
+      project.isRejected = true;
+      await project.save();
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        data: 'Request for Project is rejected',
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        statusCode: 400,
+        data: 'Project id not found',
+      });
+    }
+  } else {
+    res.status(400).json({
+      success: false,
+      data: 'Project is already granted',
+    });
+  }
+};
 const listAllProjectRequests = async (req, res) => {
   const project = await Project.find({ isRequested: true });
   res.status(200).json({
     success: true,
     statusCode: 200,
     data: project,
-  });    
+  });
+};
+const listAcceptedProjects = async (req, res) => {
+  const project = await Project.find({ isGranted: true });
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    data: project,
+  });
+};
+const listRejectedProjects = async (req, res) => {
+  const project = await Project.find({ isRejected: true });
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    data: project,
+  });
 };
 
-module.exports = { userList, adminList, grantProject, listAllProjectRequests };
+module.exports = {
+  userList,
+  adminList,
+  grantProject,
+  rejectProject,
+  listAllProjectRequests,
+  listRejectedProjects,
+  listAcceptedProjects,
+};
