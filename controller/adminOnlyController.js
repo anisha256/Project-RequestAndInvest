@@ -61,6 +61,32 @@ const rejectProject = async (req, res) => {
     });
   }
 };
+// const sendEmail = async (req, res) => {
+//   const project = await Project.find({ isGranted: true });
+
+//   if (project.isGranted === false) {
+//     try {
+//       project.isRejected = true;
+//       await project.save();
+//       res.status(200).json({
+//         success: true,
+//         statusCode: 200,
+//         data: 'Request for Project is rejected',
+//       });
+//     } catch (error) {
+//       res.status(400).json({
+//         success: false,
+//         statusCode: 400,
+//         data: 'Project id not found',
+//       });
+//     }
+//   } else {
+//     res.status(400).json({
+//       success: false,
+//       data: 'Project is already granted',
+//     });
+//   }
+// };
 const listAllProjectRequests = async (req, res) => {
   const project = await Project.find({ isRequested: true });
   res.status(200).json({
@@ -94,4 +120,5 @@ module.exports = {
   listAllProjectRequests,
   listRejectedProjects,
   listAcceptedProjects,
+  // sendEmail,
 };

@@ -65,7 +65,11 @@ const login = async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorResponse(`Invalid Credentials`, 401));
     }
-    if (user.role === 'Admin' || user.role === 'User') {
+    if (
+      user.role === 'Admin' ||
+      user.role === 'User' ||
+      user.role === 'SuperAdmin'
+    ) {
       const token = getToken(user);
       res.status(200).json({
         message: 'login successfully',

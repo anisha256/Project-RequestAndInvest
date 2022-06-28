@@ -36,8 +36,8 @@ const admin = async (req, res, next) => {
   }
 };
 
-// @desc middleware for superadmin only access
-const superAdmin = async (req, res, next) => {
+// @desc middleware for superAdminOnly only access
+const superAdminOnly = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -55,7 +55,7 @@ const superAdmin = async (req, res, next) => {
       return next(new ErrorResponse('No user found with this id', 404));
     }
     if (user.role !== 'SuperAdmin') {
-      console.log('Non superadmin access.');
+      console.log('Non superAdminOnly access.');
       return next(
         new ErrorResponse('Not authorized to access this route', 401)
       );
@@ -92,4 +92,4 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin, superAdmin };
+module.exports = { protect, admin, superAdminOnly };
