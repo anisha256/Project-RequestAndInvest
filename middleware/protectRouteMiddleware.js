@@ -1,10 +1,10 @@
 /* eslint-disable prefer-destructuring */
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const ErrorResponse = require('../utils/errorResponse').default;
+const ErrorResponse = require('../utils/errorResponse');
 
 // @desc middleware for admin only access
-exports.adminOnlyAccess = async (req, res, next) => {
+const admin = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -37,7 +37,7 @@ exports.adminOnlyAccess = async (req, res, next) => {
 };
 
 // @desc middleware for superadmin only access
-exports.superAdminAccess = async (req, res, next) => {
+const superAdmin = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -67,7 +67,7 @@ exports.superAdminAccess = async (req, res, next) => {
   }
 };
 
-exports.registeredUserAccess = async (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -90,3 +90,5 @@ exports.registeredUserAccess = async (req, res, next) => {
     return next(new ErrorResponse('Not authorized to access this route', 401));
   }
 };
+
+module.exports = { protect, admin, superAdmin };

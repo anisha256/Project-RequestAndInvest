@@ -13,7 +13,7 @@ router.route('/auth/user/register').post(userRegister);
 router.route('/auth/superAdminregister').post(superAdminRegister);
 router.route('/deactivate/:id').post(deactivateUser);
 
-router.route('/login').get((req, res, next) => {
+router.route('/login').get((req, res) => {
   res.status(200).json({
     message: true,
   });

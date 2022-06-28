@@ -4,47 +4,47 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
 // create Schema
-
-const UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: [true, 'please provide a username'],
+const UserSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, 'please provide a username'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Please provide an email'],
+      unique: true,
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        'Please Provide a valid email',
+      ],
+    },
+    password: {
+      type: String,
+      required: [true, 'please add a password'],
+      minlength: 6,
+      select: false,
+    },
+    role: {
+      type: String,
+      default: 'User',
+    },
+    isDeactivated: {
+      type: Boolean,
+      default: false,
+    },
   },
-  email: {
-    type: String,
-    required: [true, 'Please provide an email'],
-    unique: true,
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Please Provide a valid email',
-    ],
-  },
-  password: {
-    type: String,
-    required: [true, 'please add a password'],
-    minlength: 6,
-    select: false,
-  },
-  created_on: {
-    type: Date,
-    default: Date.now,
-  },
-  role: {
-    type: String,
-    default: 'User',
-  },
-  isDeactivated: {
-    type: Boolean,
-    default: false,
-  },
-});
-
+  {
+    timeStamps: true,
+  }
+);
+// comparing password for login
+UserSchema.methods.matchPassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
 // password hash //run always before pre run
 
 UserSchema.pre('save', async function (next) {
-  // if pw is not changed pass to nxt middleware
-
-  // no hashing
   if (!this.isModified('password')) {
     next();
   }
@@ -54,11 +54,6 @@ UserSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
-// comparing password for login
-
-UserSchema.methods.matchPassword = function (password) {
-  return bcrypt.compare(password, this.password);
-};
 
 // provide token for sucess auth
 
@@ -75,4 +70,5 @@ UserSchema.methods.getSignedToken = function () {
   );
 };
 
-module.exports = mongoose.model('user', UserSchema);
+const User = mongoose.model('User', UserSchema);
+module.exports = User;
