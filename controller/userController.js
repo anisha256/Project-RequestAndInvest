@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require('../models/User');
 
 const getProfiles = async (req, res, next) => {
   try {
@@ -14,6 +14,7 @@ const getProfiles = async (req, res, next) => {
       message: error.message,
     });
   }
+  next();
 };
 
 const editProfile = async (req, res, next) => {
@@ -26,16 +27,16 @@ const editProfile = async (req, res, next) => {
       }
     );
     res.status(200).json({
-        status: true,
-        statusCode: 200,
-        data: updatedProfile,
-
+      status: true,
+      statusCode: 200,
+      data: updatedProfile,
     });
   } catch (error) {
     res.status(404).json({
-      message: "Profile not found",
+      message: 'Profile not found',
     });
   }
+  next();
 };
 
 module.exports = { getProfiles, editProfile };

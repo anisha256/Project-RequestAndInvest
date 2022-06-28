@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
@@ -8,20 +8,20 @@ const crypto = require('crypto');
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "please provide a username"],
+    required: [true, 'please provide a username'],
   },
   email: {
     type: String,
-    required: [true, "Please provide an email"],
+    required: [true, 'Please provide an email'],
     unique: true,
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please Provide a valid email",
+      'Please Provide a valid email',
     ],
   },
   password: {
     type: String,
-    required: [true, "please add a password"],
+    required: [true, 'please add a password'],
     minlength: 6,
     select: false,
   },
@@ -39,36 +39,40 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-//password hash //run always before pre run 
+// password hash //run always before pre run
 
-UserSchema.pre('save', async function (next){
-    //if pw is not changed pass to nxt middleware
-    //no hashing 
-    if (!this.isModified('password')){
-        next();
-    }
-    //generate salt for hashing pw
-    const salt = await bcrypt.genSalt(10);
-    this.password= await bcrypt.hash(this.password,salt);
+UserSchema.pre('save', async function (next) {
+  // if pw is not changed pass to nxt middleware
+
+  // no hashing
+  if (!this.isModified('password')) {
     next();
-})
-//comparing password for login
-UserSchema.methods.matchPassword = async function(password){
-    return await bcrypt.compare(password,this.password);
-}
+  }
+  // generate salt for hashing pw
 
-//provide token for sucess auth 
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+// comparing password for login
+
+UserSchema.methods.matchPassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+// provide token for sucess auth
+
 UserSchema.methods.getSignedToken = function () {
-    return jwt.sign(
-      {
-        id: this._id,
-      },
-      process.env.JWT_SECRET,
-      {
-        // expiresIn: process.env.JWT_EXPIRE,
-        expiresIn: '1d',
-      }
-    );
-  };
+  return jwt.sign(
+    {
+      id: this.id,
+    },
+    process.env.JWT_SECRET,
+    {
+      // expiresIn: process.env.JWT_EXPIRE,
+      expiresIn: '1d',
+    }
+  );
+};
 
-module.exports = User = mongoose.model('user',UserSchema)
+module.exports = mongoose.model('user', UserSchema);

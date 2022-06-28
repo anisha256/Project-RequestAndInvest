@@ -1,4 +1,5 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
 
 const {
@@ -6,17 +7,17 @@ const {
   login,
   superAdminRegister,
   deactivateUser,
-} = require("../controller/authController");
+} = require('../controller/authController');
 
-router.route("/auth/user/register").post(userRegister);
-router.route("/auth/superAdminregister").post(superAdminRegister);
-router.route("/deactivate/:id").post(deactivateUser);
+router.route('/auth/user/register').post(userRegister);
+router.route('/auth/superAdminregister').post(superAdminRegister);
+router.route('/deactivate/:id').post(deactivateUser);
 
-router.route("/login").get((req, res, next) => {
+router.route('/login').get((req, res, next) => {
   res.status(200).json({
     message: true,
   });
 });
-router.route("/login").post(login);
+router.route('/login').post(login);
 
 module.exports = router;
