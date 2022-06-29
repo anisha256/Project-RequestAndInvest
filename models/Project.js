@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
     firstName: {
       type: String,
       required: [true, 'please enter firstname'],
@@ -32,7 +37,6 @@ const projectSchema = new mongoose.Schema(
       required: [true, 'please enter teamExp'],
     },
     linkedinProfiles: [{ type: String }],
-
     websiteUrl: {
       type: String,
       required: true,

@@ -32,6 +32,16 @@ const superAdminRegister = async (req, res, next) => {
 };
 const userRegister = async (req, res, next) => {
   const { username, email, password, role } = req.body;
+  if (!username || !email || !password) {
+    res.status(400);
+    throw new Error('Please add all fields');
+  }
+  // check if user exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
   try {
     const user = await User.create({
       username,

@@ -7,8 +7,8 @@ const {
   login,
   superAdminRegister,
   deactivateUser,
-  sendMail,
 } = require('../controller/authController');
+const { sendMail } = require('../controller/mailController');
 
 router.route('/auth/user/register').post(userRegister);
 router.route('/auth/superAdminregister').post(superAdminRegister);
