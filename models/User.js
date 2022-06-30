@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
 // create Schema
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -38,13 +37,15 @@ const UserSchema = new mongoose.Schema(
     timeStamps: true,
   }
 );
+// define schema level methods to create access token and refresh token
+
 // comparing password for login
-UserSchema.methods.matchPassword = function (password) {
+userSchema.methods.matchPassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
 // password hash //run always before pre run
 
-UserSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -55,20 +56,33 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// provide token for sucess auth
+// userSchema.methods.getAuthToken = function () {
+//   return jwt.sign(
+//     {
+//       id: this.id,
+//     },
+//     process.env.JWT_SECRET,
+//     {
+//       // expiresIn: process.env.JWT_EXPIRE,
+//       expiresIn: '1d',
+//     }
+//   );
+// };
 
-UserSchema.methods.getSignedToken = function () {
-  return jwt.sign(
-    {
-      id: this.id,
-    },
+userSchema.methods.getAuthToken = function () {
+  const user = this;
+  const accessToken = jwt.sign(
+    { _id: user.id, email: user.email },
     process.env.JWT_SECRET,
-    {
-      // expiresIn: process.env.JWT_EXPIRE,
-      expiresIn: '1d',
-    }
+    { expiresIn: '2d' }
   );
+  const refreshToken = jwt.sign(
+    { _id: user.id, email: user.email },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: '30d' }
+  );
+  return { accessToken, refreshToken };
 };
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;

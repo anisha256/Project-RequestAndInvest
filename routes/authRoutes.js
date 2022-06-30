@@ -8,7 +8,7 @@ const {
   superAdminRegister,
   deactivateUser,
 } = require('../controller/authController');
-const { sendMail } = require('../controller/mailController');
+const { sendMailToGranted } = require('../controller/mailController');
 
 router.route('/auth/user/register').post(userRegister);
 router.route('/auth/superAdminregister').post(superAdminRegister);
@@ -20,6 +20,6 @@ router.route('/login').get((req, res) => {
   });
 });
 router.route('/login').post(login);
-router.route('/send/mail').post(sendMail);
+router.route('/send/mail').post(sendMailToGranted);
 
 module.exports = router;

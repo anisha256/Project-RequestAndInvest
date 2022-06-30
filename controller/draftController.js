@@ -21,6 +21,7 @@ const createProjectDraft = asyncHandler(async (req, res, next) => {
     projectVision,
     additionalInfo,
   } = req.body;
+  const createdBy = req.user.email;
   const linkedinProfileArray = [];
   if (linkedinProfiles) {
     linkedinProfiles.split(',').forEach((linkedinProfile) => {
@@ -44,6 +45,7 @@ const createProjectDraft = asyncHandler(async (req, res, next) => {
     projectVision,
     additionalInfo,
     user: req.user.id,
+    createdBy,
   });
   const createdDraft = await draft.save();
   if (createdDraft) {

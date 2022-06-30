@@ -3,11 +3,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const Project = require('../models/Project');
 const ErrorResponse = require('../utils/errorResponse');
-
-const getToken = (user) => {
-  const token = user.getSignedToken();
-  return { token };
-};
+// const RefreshToken = require('../models/refreshToken');
 
 const superAdminRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -19,7 +15,7 @@ const superAdminRegister = async (req, res, next) => {
       password,
       role,
     });
-    const token = getToken(user);
+    const token = user.getAuthToken();
     res.status(200).json({
       message: 'superadmin registered successfully',
       statusCode: 200,
@@ -49,7 +45,7 @@ const userRegister = async (req, res, next) => {
       password,
       role,
     });
-    const token = getToken(user);
+    const token = user.getAuthToken();
     console.log(token);
     res.status(200).json({
       message: 'user registered successfully',
@@ -82,7 +78,7 @@ const login = async (req, res, next) => {
       user.role === 'User' ||
       user.role === 'SuperAdmin'
     ) {
-      const token = getToken(user);
+      const token = user.getAuthToken();
       res.status(200).json({
         message: 'login successfully',
         statusCode: 200,
@@ -114,54 +110,9 @@ const deactivateUser = async (req, res) => {
   }
 };
 
-const sendMail = async (req, res, next) => {
-  try {
-    const projects = await Project.find({ isGranted: true });
-    const emails = [];
-    projects.forEach((project) => {
-      emails.push(project.email);
-    });
-    console.log(emails);
-    // respomsible for sending mail
-    // const mailTransporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: '1aanisha.rai@gmail.com',
-    //     pass: '',
-    //   },
-    // });
-    // const details = {
-    //   from: '1aanisha.rai@gmail.com',
-    //   to: 'appyrai6@gmail.com',
-    //   subject: 'Request Granted',
-    //   text: 'Congratulations.Your request for the project has been granted.',
-    // };
-    // mailTransporter.sendMail(details, (err) => {
-    //   if (err) {
-    //     console.log('it has an error', err);
-    //   } else {
-    //     console.log('email has sent');
-    //   }
-    // });
-    res.status(200).json({
-      status: true,
-      statusCode: 200,
-      // data: 'Email is sent successfully',
-      data: emails,
-    });
-  } catch (error) {
-    res.status(404).json({
-      data: 'not found',
-    });
-  }
-
-  next();
-};
-
 module.exports = {
   superAdminRegister,
   userRegister,
   login,
   deactivateUser,
-  sendMail,
 };

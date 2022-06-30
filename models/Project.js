@@ -69,6 +69,9 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    createdBy: {
+      type: String,
+    },
     isDraft: {
       type: Boolean,
       required: true,
