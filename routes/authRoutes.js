@@ -8,6 +8,7 @@ const {
   superAdminRegister,
   deactivateUser,
   refresh,
+  verifyEmail,
 } = require('../controller/authController');
 const { sendMailToGranted } = require('../controller/mailController');
 const { refreshTokenReq } = require('../middleware/protectRouteMiddleware');
@@ -15,6 +16,7 @@ const { refreshTokenReq } = require('../middleware/protectRouteMiddleware');
 router.route('/auth/user/register').post(userRegister);
 router.route('/auth/superAdminregister').post(superAdminRegister);
 router.route('/deactivate/:id').post(deactivateUser);
+router.route('/email/verify').get(verifyEmail);
 
 router.route('/login').get((req, res) => {
   res.status(200).json({

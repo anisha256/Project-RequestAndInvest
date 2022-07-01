@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'User',
     },
+    emailToken: {
+      type: String,
+    },
     isVerified: {
       type: Boolean,
       default: false,

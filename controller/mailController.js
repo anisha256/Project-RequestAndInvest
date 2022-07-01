@@ -1,8 +1,10 @@
 const sgMail = require('@sendgrid/mail');
 const Project = require('../models/Project');
+const User = require('../models/User');
+const ErrorResponse = require('../utils/errorResponse');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
+// Email needs to be sent to the applicants who have received the grant
 const sendMailToGranted = async (req, res, next) => {
   try {
     const projects = await Project.find({ isGranted: true });
@@ -12,11 +14,12 @@ const sendMailToGranted = async (req, res, next) => {
     });
     console.log(emails);
     sgMail.send({
-      to: 'appyrai6@gmail.com',
+      to: emails,
       from: '1aanisha.rai@gmail.com',
       subject: 'Project granted ',
       html: ` <h3>Congratulations,</h3>
-      <p>Your request for the project is granted</p>`,
+      <p>Your request for the project is granted</p>
+     `,
     });
     res.status(200).json({
       status: true,

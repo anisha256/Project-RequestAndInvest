@@ -1,9 +1,10 @@
-// const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
+const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
-// const RefreshToken = require('../models/refreshToken');
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const superAdminRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
   const role = 'SuperAdmin';
@@ -37,24 +38,56 @@ const userRegister = async (req, res, next) => {
     res.status(400);
     throw new Error('User already exists');
   }
+
   try {
     const user = await User.create({
       username,
       email,
       password,
       role,
+      emailToken: crypto.randomBytes(64).toString('hex'),
     });
     const token = user.getAuthToken();
     console.log(token);
+
     res.status(200).json({
       message: 'user registered successfully',
       statusCode: 200,
       data: [{ email: user.email, role: user.role }],
     });
+    const msg = {
+      to: user.email,
+      from: '1aanisha.rai@gmail.com',
+      subject: 'Verify your Email ',
+      html: ` <h2>
+      Let's verify your email address so you can start using this website.</h2>
+      <p>Hello,Thanks for registering on our site</p>
+      <p>Please click the link below to verify ur account</p>
+      <a href="http://${req.headers.host}/verify-email?token=${user.emailToken}">Verify your account</a>
+      `,
+    };
+
+    await sgMail.send(msg);
     return next();
   } catch (error) {
     return next(error);
   }
+};
+// We need to send an email to the user to verify the email after registration
+const verifyEmail = async (req, res, next) => {
+  console.log(req.query);
+  const user = await User.findOne({ emailToken: req.query.token });
+  console.log(user);
+  if (!user) {
+    return next(new ErrorResponse('Token is invalid', 400));
+  }
+  user.isVerified = true;
+  user.emailToken = null;
+  await user.save();
+  return res.status(200).json({
+    success: true,
+    message: 'email verified successfully',
+  });
 };
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -129,6 +162,7 @@ const refresh = async (req, res) => {
 module.exports = {
   superAdminRegister,
   userRegister,
+  verifyEmail,
   login,
   deactivateUser,
   refresh,
