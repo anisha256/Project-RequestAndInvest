@@ -1,12 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const Project = require('../models/Project');
-const User = require('../models/User');
 
 // Draft
-const createProjectDraft = asyncHandler(async (req, res, next) => {
-  console.log(req.user);
-  console.log(req.body);
-
+const createProjectDraft = asyncHandler(async (req, res) => {
+  // console.log(req.user);
+  // console.log(req.body);
   const {
     firstName,
     lastName,

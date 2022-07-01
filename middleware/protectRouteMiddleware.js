@@ -15,7 +15,8 @@ const admin = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
     // console.log('dec${decoded}');
-    const user = await User.findById(decoded);
+    const { _id } = decoded;
+    const user = await User.findById(_id);
     if (!user) {
       return next(new ErrorResponse('No user found with this id', 404));
     }
@@ -43,7 +44,8 @@ const superAdminOnly = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
-    const user = await User.findById(decoded);
+    const { _id } = decoded;
+    const user = await User.findById(_id);
     if (!user) {
       return next(new ErrorResponse('No user found with this id', 404));
     }
@@ -68,10 +70,13 @@ const protect = asyncHandler(async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(`dec${decoded}`);
-    console.log(decoded);
-    const user = await User.findById(decoded);
-    console.log('user', user);
+    // console.log(`dec${decoded}`);
+    // console.log(decoded);
+    // destructure
+    const { _id } = decoded;
+    // console.log(_id);
+    const user = await User.findById(_id);
+    // console.log('user', user);
     if (!user) {
       return next(new ErrorResponse('No user found with this id', 404));
     }
@@ -89,7 +94,8 @@ const refreshTokenReq = async (req, res, next) => {
       return next(new ErrorResponse('refresh_token is required', 400));
     }
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    req.user = await User.findById(decoded.id);
+    const { _id } = decoded;
+    req.user = await User.findById(_id);
     req.refresh_token = token;
 
     return next();

@@ -55,7 +55,7 @@ const editProfile = async (req, res, next) => {
   }
   next();
 };
-const requestProject = async (req, res, next) => {
+const requestProject = async (req, res) => {
   const {
     firstName,
     lastName,

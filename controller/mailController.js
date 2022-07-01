@@ -1,7 +1,5 @@
 const sgMail = require('@sendgrid/mail');
 const Project = require('../models/Project');
-const User = require('../models/User');
-const ErrorResponse = require('../utils/errorResponse');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // Email needs to be sent to the applicants who have received the grant

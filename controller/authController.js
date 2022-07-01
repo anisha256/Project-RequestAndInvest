@@ -1,5 +1,4 @@
 const sgMail = require('@sendgrid/mail');
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
@@ -78,6 +77,7 @@ const verifyEmail = async (req, res, next) => {
   console.log(req.query);
   const user = await User.findOne({ emailToken: req.query.token });
   console.log(user);
+
   if (!user) {
     return next(new ErrorResponse('Token is invalid', 400));
   }
