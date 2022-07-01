@@ -94,6 +94,7 @@ const login = async (req, res, next) => {
   if (!email && !password) {
     return next(new ErrorResponse('Please provide email and password', 400));
   }
+
   try {
     const user = await User.findOne({ email }).select('+password');
     console.log(user);
@@ -111,6 +112,7 @@ const login = async (req, res, next) => {
       user.role === 'SuperAdmin'
     ) {
       const token = user.getAuthToken();
+      console.log('refresh_token:', token.refreshToken);
       res.status(200).json({
         message: 'login successfully',
         statusCode: 200,

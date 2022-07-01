@@ -18,8 +18,8 @@ const { protect } = require('../middleware/protectRouteMiddleware');
 const router = express.Router();
 
 router.route('/profiles').get(getProfiles);
-router.route('/profile/:id').get(getProfileById);
-router.route('/:id/profile').put(editProfile);
+router.route('/profile/:id').get(protect, getProfileById);
+router.route('/:id/profile').put(protect, editProfile);
 
 router.route('/project/request').post(protect, requestProject);
 router.route('/project/draft').post(protect, createProjectDraft);
