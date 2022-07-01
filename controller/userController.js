@@ -73,48 +73,48 @@ const requestProject = async (req, res, next) => {
     projectVision,
     additionalInfo,
   } = req.body;
+  const createdBy = req.user.email;
   const linkedinProfileArray = [];
   if (linkedinProfiles) {
     linkedinProfiles.split(',').forEach((linkedinProfile) => {
       linkedinProfileArray.push(linkedinProfile.trim());
     });
   }
-  try {
-    const project = await Project.create({
-      firstName,
-      lastName,
-      email,
-      telegramUsername,
-      fullTimeWorker,
-      teamExperience,
-      linkedinProfiles: linkedinProfileArray,
-      websiteUrl,
-      country,
-      city,
-      projectName,
-      description,
-      projectType,
-      projectVision,
-      additionalInfo,
-      // isRequested: true,
+  const project = new Project({
+    firstName,
+    lastName,
+    email,
+    telegramUsername,
+    fullTimeWorker,
+    teamExperience,
+    linkedinProfiles: linkedinProfileArray,
+    websiteUrl,
+    country,
+    city,
+    projectName,
+    description,
+    projectType,
+    projectVision,
+    additionalInfo,
+    user: req.user.id,
+    createdBy,
+  });
+
+  project.isRequested = true;
+  project.isDraft = false;
+  await project.save();
+  res.status(200).json({
+    message: 'Transaction has been submitted',
+    statusCode: 200,
+    data: project,
+  });
+  if (project) {
+    res.status(400).json({
+      status: false,
+      data: 'Transaction has already been submitted',
     });
-    project.isRequested = true;
-    project.isDraft = false;
-    await project.save();
-    res.status(200).json({
-      message: 'Transaction has been submitted',
-      statusCode: 200,
-      data: project,
-    });
-    if (project) {
-      res.status(400).json({
-        status: false,
-        data: 'Transaction has already been submitted',
-      });
-    }
-    return next();
-  } catch (error) {
-    return next(error);
+  } else {
+    res.status(201).json({ success: false, ...req.body });
   }
 };
 

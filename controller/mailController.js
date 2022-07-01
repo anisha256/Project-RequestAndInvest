@@ -12,17 +12,17 @@ const sendMailToGranted = async (req, res, next) => {
     });
     console.log(emails);
     sgMail.send({
-      to: emails,
-      from: '',
+      to: 'appyrai6@gmail.com',
+      from: '1aanisha.rai@gmail.com',
       subject: 'Project granted ',
       html: ` <h3>Congratulations,</h3>
-      <p>Your request For the Project is granted</p>`,
+      <p>Your request for the project is granted</p>`,
     });
     res.status(200).json({
       status: true,
       statusCode: 200,
-      // data: 'Email is sent successfully',
-      data: emails,
+      data: 'Email is sent successfully',
+      // data: emails,
     });
   } catch (error) {
     res.status(404).json({

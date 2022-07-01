@@ -21,7 +21,7 @@ router.route('/profiles').get(getProfiles);
 router.route('/profile/:id').get(getProfileById);
 router.route('/:id/profile').put(editProfile);
 
-router.route('/project/request').post(requestProject);
+router.route('/project/request').post(protect, requestProject);
 router.route('/project/draft').post(protect, createProjectDraft);
 
 router.route('/project/drafts/:userid').get(protect, getDraftsOfUser);

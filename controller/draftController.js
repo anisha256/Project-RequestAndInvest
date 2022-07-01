@@ -4,6 +4,9 @@ const User = require('../models/User');
 
 // Draft
 const createProjectDraft = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
+  console.log(req.body);
+
   const {
     firstName,
     lastName,
@@ -48,11 +51,12 @@ const createProjectDraft = asyncHandler(async (req, res, next) => {
     createdBy,
   });
   const createdDraft = await draft.save();
+  console.log(createdDraft.email);
   if (createdDraft) {
     res.status(200).json({
       message: 'Draft has been created',
       statusCode: 200,
-      data: draft,
+      data: createdDraft,
     });
   } else {
     res.status(201).json({ success: false, ...req.body });

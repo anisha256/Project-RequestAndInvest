@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'User',
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     isDeactivated: {
       type: Boolean,
       default: false,
@@ -83,6 +87,17 @@ userSchema.methods.getAuthToken = function () {
   );
   return { accessToken, refreshToken };
 };
-
+userSchema.methods.refreshAuthToken = function () {
+  console.log('hughmiuhmjh');
+  const user = this;
+  console.log(user);
+  const accessToken = jwt.sign(
+    { _id: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+  console.log(accessToken);
+  return { accessToken };
+};
 const User = mongoose.model('User', userSchema);
 module.exports = User;
