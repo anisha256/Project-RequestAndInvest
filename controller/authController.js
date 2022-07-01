@@ -143,20 +143,18 @@ const deactivateUser = async (req, res) => {
 };
 const refresh = async (req, res) => {
   console.log('dcvgbhnjmk,');
-  // const { user } = req;
-  // console.log(user);
-
-  // console.log(user);
-  // const token = await user.refreshAuthToken();
-  // console.log('new access token', token);
-  // res.json({
-  //   status: 'success',
-  //   message: 'Token refresh successfully',
-  //   data: {
-  //     access_token: token.accessToken,
-  //     // refresh_token: req.header('refresh_token'),
-  //   },
-  // });
+  const { user } = req;
+  console.log(user);
+  const token = await user.refreshAuthToken();
+  console.log('new access token', token);
+  res.json({
+    status: 'success',
+    message: 'Token refresh successfully',
+    data: {
+      access_token: token.accessToken,
+      // refresh_token: req.header('refresh_token'),
+    },
+  });
 };
 
 module.exports = {

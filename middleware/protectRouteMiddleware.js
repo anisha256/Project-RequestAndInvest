@@ -97,7 +97,6 @@ const refreshTokenReq = async (req, res, next) => {
     const { _id } = decoded;
     req.user = await User.findById(_id);
     req.refresh_token = token;
-
     return next();
   } catch (error) {
     res.status(403);
