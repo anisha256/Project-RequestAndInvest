@@ -13,9 +13,12 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api', require('./routes/authRoutes'));
+app.use('/api/file', require('./routes/uploadRoutes'));
+
 app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/admin', require('./routes/adminOnlyRoutes'));
 app.use('/api/superadmin', require('./routes/superAdminOnlyRoutes'));

@@ -117,10 +117,16 @@ const requestProject = async (req, res) => {
     res.status(201).json({ success: false, ...req.body });
   }
 };
+const uploadFile = (req, res) => {
+  res.json({
+    message: 'uploaded',
+  });
+};
 
 module.exports = {
   getProfiles,
   editProfile,
   getProfileById,
   requestProject,
+  uploadFile,
 };
