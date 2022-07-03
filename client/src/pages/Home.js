@@ -124,7 +124,7 @@ const Home = () => {
           <CKEditor
             config={{
               ckfinder: {
-                uploadUrl: '/upload',
+                uploadUrl: 'http://localhost:5000/api/file/upload',
               },
             }}
             editor={Editor}

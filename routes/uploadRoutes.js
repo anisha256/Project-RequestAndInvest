@@ -4,8 +4,6 @@ const path = require('path');
 
 const router = express.Router();
 
-const { uploadFile } = require('../controller/userController');
-
 const storage = multer.diskStorage({
   destination(req, file, callback) {
     callback(null, 'uploads/');
@@ -38,6 +36,8 @@ const upload = multer({
   },
 });
 
-router.post('/upload', upload.single('file'), uploadFile);
+router.post('/upload', upload.single('file'), (req, res) => {
+  res.json({ url: req.file.path });
+});
 
 module.exports = router;
