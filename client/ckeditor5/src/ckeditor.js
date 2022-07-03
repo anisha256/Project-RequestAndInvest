@@ -94,5 +94,7 @@ Editor.defaultConfig = {
     contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
   },
 };
+<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>;
+<script src="https://cdn.ckbox.io/CKBox/1.0.0/ckbox.js"></script>;
 
 export default Editor;

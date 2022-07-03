@@ -37,7 +37,10 @@ const upload = multer({
 });
 
 router.post('/upload', upload.single('file'), (req, res) => {
-  res.json({ url: req.file.path });
+  res.status(200).json({
+    message: 'uploaded successfully',
+    url: req.file.path,
+  });
 });
 
 module.exports = router;
