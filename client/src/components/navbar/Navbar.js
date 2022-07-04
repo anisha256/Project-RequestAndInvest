@@ -17,7 +17,8 @@ const Navbar = () => {
         <NavCenter>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/feed">Feed</NavLink>
-          <NavLink to="/profile">My Profile</NavLink>
+          <NavLink to="/profile">Profile</NavLink>
+          <NavLink to="/apply/project">Apply</NavLink>
         </NavCenter>
         <NavRight>
           <NavLink to="/login">
@@ -33,7 +34,8 @@ const Navbar = () => {
             <MobileMenu>
               <NavLink to="/">Home</NavLink>
               <NavLink to="/feed">Feed</NavLink>
-              <NavLink to="/profile">My Profile</NavLink>
+              <NavLink to="/profile">Profile</NavLink>
+              <NavLink to="/apply/project">Apply</NavLink>
               <NavLink to="/login">
                 <Button>Login</Button>
               </NavLink>
@@ -146,4 +148,5 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 15px;
   padding: 5px;
+  cursor: pointer;
 `;

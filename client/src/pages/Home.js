@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import invest from '../assets/1.png';
 import {
@@ -8,13 +8,20 @@ import {
   FaFacebookMessenger,
 } from 'react-icons/fa';
 const Home = () => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/login');
+  };
   return (
     <Container>
       <Section1>
         <Title>
           <p>IDEAS, PROPOSAL && INVESTMENTS</p>
+          <ButtonDiv>
+            <StartButton onClick={handleClick}>Get Started</StartButton>
+          </ButtonDiv>
         </Title>
-        <Photo1>{/* <Photo src={invest} /> */}</Photo1>
+
         <LogoSection>
           <Logos>
             <FaFacebookSquare />
@@ -24,13 +31,13 @@ const Home = () => {
         </LogoSection>
       </Section1>
 
-      <Section2>
+      {/* <Section2>
         <Photo1>
           <Photo src={invest} />
         </Photo1>
         section1
         <Link to="/form">Form</Link>
-      </Section2>
+      </Section2> */}
     </Container>
   );
 };
@@ -57,7 +64,7 @@ const Photo = styled.img`
 const Title = styled.section`
   display: grid;
   grid-row: 2/3;
-  height: 100px;
+  height: 150px;
   width: 500px;
   background-color: #564480;
 
@@ -80,6 +87,27 @@ const Title = styled.section`
     }
   }
 `;
+const StartButton = styled.button`
+  color: #9e7fe8;
+  background-color: #fffade;
+  height: 45px;
+  width: 200px;
+  cursor: pointer;
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  &:hover {
+    color: #fdf6ff;
+    background-color: #9e7fe8;
+  }
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Logos = styled.div`
   display: flex;
   flex-direction: row;
@@ -99,7 +127,7 @@ const LogoSection = styled.div`
 `;
 const Section1 = styled.section`
   /* border: 1px solid white; */
-  min-height: 700px;
+  min-height: 805px;
   color: #564480;
   background-image: linear-gradient(
     to top,
@@ -123,4 +151,4 @@ const Section1 = styled.section`
     grid-template-rows: 80px 2.4fr 1.1fr 2fr;
   }
 `;
-const Section2 = styled.section``;
+// const Section2 = styled.section``;

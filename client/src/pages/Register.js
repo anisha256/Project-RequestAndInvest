@@ -126,6 +126,7 @@ const Button = styled.button`
   color: white;
   font-size: 15px;
   font-weight: bold;
+  cursor: pointer;
 `;
 const InputC = styled.section`
   display: flex;

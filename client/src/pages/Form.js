@@ -25,6 +25,7 @@ const Button = styled.button`
   height: 30px;
   width: 80px;
   color: white;
+  cursor: pointer;
 `;
 const InputC = styled.section`
   display: flex;
