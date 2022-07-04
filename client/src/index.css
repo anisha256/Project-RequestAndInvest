@@ -8,11 +8,10 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  height: 100vh;
+  min-height: 100vh;
 }
 a {
   text-decoration: none;
-  color: #000;
 }
 
 p {
@@ -26,8 +25,5 @@ li {
 }
 .container {
   width: 100%;
-  max-width: 960px;
   margin: 0 auto;
-  padding: 0 20px;
-  /* text-align: center; */
 }
