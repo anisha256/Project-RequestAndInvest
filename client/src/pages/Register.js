@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/spinner/Spinner';
+import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
   });
@@ -16,17 +19,44 @@ const Register = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('login successful', { autoClose: 2000 });
-    navigate('/');
+    try {
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+      const data = await axios.post(
+        'http://localhost:5000/api/auth/user/register',
+        formData,
+        config
+      );
+      console.log(data);
+      toast.success('Registered successful', { autoClose: 2000 });
+    } catch (error) {}
+
+    // navigate('/');
   };
   return (
     <>
       <Container>
-        <span>Register</span>
+        {/* {loading && <Spinner />} */}
         <FormWrapper>
-          <LoginForm onSubmit={handleSubmit}>
+          <RegisterForm onSubmit={handleSubmit}>
+            <h2>Register</h2>
+
+            <InputC>
+              <label>Username</label>
+              <Input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Enter the username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </InputC>
             <InputC>
               <label>Email</label>
               <Input
@@ -52,7 +82,7 @@ const Register = () => {
             <InputC>
               <Button type="submit">Register</Button>
             </InputC>
-          </LoginForm>
+          </RegisterForm>
         </FormWrapper>
       </Container>
       <ToastContainer
@@ -100,9 +130,9 @@ const FormWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-const LoginForm = styled.form`
-  height: 300px;
-  width: 400px;
+const RegisterForm = styled.form`
+  /* height: 300px;
+  width: 400px; */
   padding: 20px;
   background-color: #fdf7ff;
   display: flex;

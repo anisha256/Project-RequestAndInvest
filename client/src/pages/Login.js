@@ -1,21 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState([]);
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
+
   const handleChange = (e) => {
     setLoginData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+  const handleRefreshToken = async () => {
+    try {
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          refresh_token: `${localStorage.getItem('refreshToken')}`,
+        },
+      };
+      const { data } = await axios.get(
+        'http://localhost:5000/api/refresh',
+        config
+      );
+      const { accessToken } = data.data;
+      console.log('new access token :', accessToken);
+      localStorage.setItem('accessToken', accessToken);
+    } catch (error) {}
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,29 +45,43 @@ const Login = () => {
           'content-type': 'application/json',
         },
       };
-      const data = await axios.post(
+      const { data } = await axios.post(
         'http://localhost:5000/api/login',
         loginData,
         config
       );
-      toast.success('login successful', { autoClose: 2000 });
-      console.log(data.data.token);
-      setLoginData({
-        email: '',
-        phone: '',
+      // console.log(data.data);
+      const { userid, username, refreshToken, role, email, accessToken } =
+        data.data;
+      setUser({
+        userid: userid,
+        username: username,
+        refreshToken: refreshToken,
+        role: role,
+        email: email,
       });
+      console.log('login refreshtoken', refreshToken);
+      console.log('login accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('role', role);
+      localStorage.setItem('_id', userid);
 
-      navigate('/');
+      handleRefreshToken();
+      toast.success('login successful', { autoClose: 2000 });
+      navigate('/profile');
     } catch (error) {
       toast.error('Invalid Credentials', { autoClose: 2000 });
     }
+    console.log(user);
   };
+
   return (
     <>
       <Container>
-        <span>Login</span>
         <FormWrapper>
           <LoginForm onSubmit={handleSubmit}>
+            <h2>Login</h2>
+
             <InputC>
               <label>Email</label>
               <Input
@@ -123,8 +156,8 @@ const FormWrapper = styled.div`
   align-items: center;
 `;
 const LoginForm = styled.form`
-  height: 300px;
-  width: 400px;
+  /* height: 300px;
+  width: 400px; */
   padding: 20px;
   background-color: #fdf7ff;
   display: flex;

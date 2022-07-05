@@ -1,10 +1,33 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import axios from 'axios';
+import { userExists } from '../Constants';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [showMediaIcon, setSetMediaIcon] = useState(false);
+  const handleLogin = () => {
+    navigate('/login');
+  };
+  const handleRegister = () => {
+    navigate('/register');
+  };
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          refresh_token: `${localStorage.getItem('refreshToken')}`,
+        },
+      };
+      await axios.delete('http://localhost:5000/api/logout', config);
+      localStorage.removeItem('refreshToken');
+      navigate('/login');
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -17,7 +40,6 @@ const Navbar = () => {
         <NavCenter>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/feed">Feed</NavLink>
-          <NavLink to="/profile">Profile</NavLink>
           <NavLink to="/apply/project">Apply</NavLink>
         </NavCenter>
         <NavRight>
@@ -32,16 +54,24 @@ const Navbar = () => {
           <GiHamburgerMenu onClick={() => setSetMediaIcon(!showMediaIcon)} />
           {showMediaIcon && (
             <MobileMenu>
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/feed">Feed</NavLink>
-              <NavLink to="/profile">Profile</NavLink>
-              <NavLink to="/apply/project">Apply</NavLink>
-              <NavLink to="/login">
-                <Button>Login</Button>
+              <NavLink to="/">
+                <Div>Home</Div>
               </NavLink>
-              <NavLink to="/register">
-                <Button>Register</Button>
+              <NavLink to="/feed">
+                <Div>Feed</Div>
               </NavLink>
+              <NavLink to="/apply/project">
+                <Div>Apply</Div>
+              </NavLink>
+              <ButtonDiv>
+                <Button onClick={handleRegister}>Register</Button>
+
+                {!userExists() ? (
+                  <Button onClick={handleLogin}>Login</Button>
+                ) : (
+                  <Button onClick={handleLogout}>Logout</Button>
+                )}
+              </ButtonDiv>
             </MobileMenu>
           )}
         </Hambuger>
@@ -81,6 +111,21 @@ const NavRight = styled.div`
   column-gap: 30px;
   @media screen and (max-width: 998px) {
     display: none;
+  }
+`;
+const Div = styled.div`
+  background-color: #9e7fe8;
+  border: none;
+  color: #fdf7ff;
+  height: 30px;
+  width: 80px;
+  border-radius: 10px;
+  font-size: 15px;
+  padding: 5px;
+  cursor: pointer;
+  text-align: center;
+  .active {
+    background-color: pink;
   }
 `;
 const NavCenter = styled.div`
@@ -137,7 +182,7 @@ const MobileMenu = styled.div`
   a.hover {
     color: #9e7fe8;
   }
-  color: rgba(255, 250, 222, 0.32);
+  color: rgba(252, 247, 255, 0.63);
 `;
 const Button = styled.button`
   background-color: #9e7fe8;
@@ -149,4 +194,13 @@ const Button = styled.button`
   font-size: 15px;
   padding: 5px;
   cursor: pointer;
+  &:hover {
+    background-color: #e8d5b5;
+    color: #564480;
+  }
+`;
+const ButtonDiv = styled.section`
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
 `;

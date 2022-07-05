@@ -26,7 +26,7 @@ const superAdminRegister = async (req, res, next) => {
   }
 };
 const userRegister = async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password } = req.body;
   if (!username || !email || !password) {
     res.status(400);
     throw new Error('Please add all fields');
@@ -43,7 +43,7 @@ const userRegister = async (req, res, next) => {
       username,
       email,
       password,
-      role,
+      role: 'User',
       emailToken: crypto.randomBytes(64).toString('hex'),
     });
     const token = user.getAuthToken();
@@ -62,10 +62,9 @@ const userRegister = async (req, res, next) => {
       Let's verify your email address so you can start using this website.</h2>
       <p>Hello,Thanks for registering on our site</p>
       <p>Please click the link below to verify ur account</p>
-      <a href="http://${req.headers.host}/verify-email?token=${user.emailToken}">Verify your account</a>
+      <a href="http://${req.headers.host}/api/verify-email?token=${user.emailToken}">Verify your account</a>
       `,
     };
-
     await sgMail.send(msg);
     return next();
   } catch (error) {
@@ -74,6 +73,7 @@ const userRegister = async (req, res, next) => {
 };
 // We need to send an email to the user to verify the email after registration
 const verifyEmail = async (req, res, next) => {
+  console.log(req.headers.host);
   console.log(req.query);
   const user = await User.findOne({ emailToken: req.query.token });
   console.log(user);
@@ -81,14 +81,16 @@ const verifyEmail = async (req, res, next) => {
   if (!user) {
     return next(new ErrorResponse('Token is invalid', 400));
   }
-  user.isVerified = true;
   user.emailToken = null;
+  user.isVerified = true;
   await user.save();
   return res.status(200).json({
     success: true,
     message: 'email verified successfully',
   });
 };
+const refreshTokens = [];
+
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email && !password) {
@@ -112,11 +114,22 @@ const login = async (req, res, next) => {
       user.role === 'SuperAdmin'
     ) {
       const token = user.getAuthToken();
-      console.log('refresh_token:', token.refreshToken);
+      const { accessToken, refreshToken } = token;
+      refreshTokens.push(refreshToken);
       res.status(200).json({
         message: 'login successfully',
         statusCode: 200,
-        data: [{ email: user.email, role: user.role, token }],
+        data: {
+          userid: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          isDeactivated: user.isDeactivated,
+          accessToken,
+          refreshToken,
+        },
       });
     } else {
       return next(new ErrorResponse(`Not Registered`, 400));
@@ -144,7 +157,6 @@ const deactivateUser = async (req, res) => {
   }
 };
 const refresh = async (req, res) => {
-  console.log('dcvgbhnjmk,');
   const { user } = req;
   console.log(user);
   const token = await user.refreshAuthToken();
@@ -153,9 +165,17 @@ const refresh = async (req, res) => {
     status: 'success',
     message: 'Token refresh successfully',
     data: {
-      access_token: token.accessToken,
+      accessToken: token.accessToken,
       // refresh_token: req.header('refresh_token'),
     },
+  });
+};
+const logout = (req, res) => {
+  const refreshToken = req.refresh_token;
+  refreshTokens.filter((token) => token !== refreshToken);
+  res.json({
+    status: 'success',
+    message: 'User logout successfully',
   });
 };
 
@@ -166,4 +186,6 @@ module.exports = {
   login,
   deactivateUser,
   refresh,
+  refreshTokens,
+  logout,
 };

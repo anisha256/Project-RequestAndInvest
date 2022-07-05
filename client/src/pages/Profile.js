@@ -1,18 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import avatar from '../assets/1.png';
+import axios from 'axios';
+import { getUserId } from '../components/Constants';
+import { useNavigate } from 'react-router';
 
 const Profile = () => {
+  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+  const id = getUserId();
+  console.log(id);
+  const [profileData, setProfileData] = useState([]);
+  const getProfileData = async () => {
+    try {
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          access_token: `${localStorage.getItem('accessToken')}`,
+        },
+      };
+      const { data } = await axios.get(
+        `http://localhost:5000/api/user/profile/${id}`,
+        config
+      );
+
+      setProfileData(data.data);
+    } catch (error) {}
+  };
+  const handleDeactivate = async () => {
+    try {
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          access_token: `${localStorage.getItem('accessToken')}`,
+        },
+      };
+
+      console.log(profileData.isDeactivated);
+      if (profileData.isDeactivated === false) {
+        await axios.post(`http://localhost:5000/api/deactivate/${id}`, config);
+        setSuccess(true);
+        toast.success('Your id is deactivated', { autoClose: 2000 });
+      }
+      // navigate('/login');
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getProfileData();
+    console.log(profileData);
+  }, []);
+
   return (
     <MainContainer>
       <Container>
         <UserIntro>
           <Left>
             <h1>User</h1>
-            <span>1aanisha.rai@gmail.com</span>
-            <span>joined on July 14 </span>
+            <span>{profileData.email}</span>
+
+            <span>
+              joined on{' '}
+              {profileData.createdAt
+                ? `${profileData.createdAt.slice(0, 10)}`
+                : '-'}{' '}
+            </span>
           </Left>
           <Right>
             <Photo src={avatar} />
@@ -29,16 +82,23 @@ const Profile = () => {
             </Title>
             <Feature>
               <span>Avatar:</span>
-              <p>1aaniaha.rai@gmail.com</p>
             </Feature>
             <Feature>
               <span>Email:</span>
+              <p>{profileData.email}</p>
             </Feature>
             <Feature>
-              <span>Password:</span>
+              <span>Username:</span>
+              <p>{profileData.username}</p>
             </Feature>
             <Feature>
-              <span>Linkedin:</span>
+              <span>Last Update:</span>
+
+              <p>
+                {profileData.updatedAt
+                  ? `${profileData.updatedAt.slice(0, 10)}`
+                  : '-'}{' '}
+              </p>
             </Feature>
           </Information>
 
@@ -50,7 +110,7 @@ const Profile = () => {
             <ButtonC>
               <p>You can deactivate ur account</p>
 
-              <Button>Deactivate</Button>
+              <Button onClick={handleDeactivate}>Deactivate</Button>
             </ButtonC>
           </Settings>
         </Combined>
@@ -150,6 +210,10 @@ const Information = styled.section`
   justify-content: space-between;
   padding-bottom: 5px;
   border: 1px solid #564480;
+  /* border: 1px solid #e8d5b5; */
+  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
 
   @media screen and (max-width: 1080px) {
     width: 60%;
@@ -160,13 +224,18 @@ const Title = styled.section`
   display: flex;
   align-items: center;
   border-bottom: 2px solid #564480;
+  /* border-bottom: 2px solid #e8d5b5; */
 `;
 const Settings = styled.section`
   display: flex;
   padding-left: 10px;
   flex-direction: column;
-
   border: 1px solid #564480;
+  /* border: 1px solid #e8d5b5; */
+  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+
   @media screen and (max-width: 1080px) {
     width: 60%;
   }
@@ -179,9 +248,7 @@ const DContent = styled.section`
   display: flex;
   align-items: center;
   border-bottom: 2px solid #1a102f;
-  @media screen and (max-width: 1080px) {
-    width: 60%;
-  }
+  /* border-bottom: 2px solid #e8d5b5; */
 `;
 const Combined = styled.div`
   width: 800px;
@@ -197,7 +264,7 @@ const Combined = styled.div`
 `;
 const Feature = styled.div``;
 const ButtonC = styled.section`
-  padding-top: 20px;
+  padding: 20px 0px;
 `;
 const Button = styled.button`
   padding: 5px 10px;

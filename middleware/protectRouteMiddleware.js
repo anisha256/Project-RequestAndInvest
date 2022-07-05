@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
+const { refreshTokens } = require('../controller/authController');
 
 // @desc middleware for admin only access
 const admin = async (req, res, next) => {
@@ -68,6 +69,7 @@ const protect = asyncHandler(async (req, res, next) => {
   if (!token) {
     return next(new ErrorResponse('Not authorized to access this route', 401));
   }
+  // check if access token is expired or not
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(`dec${decoded}`);
@@ -93,7 +95,11 @@ const refreshTokenReq = async (req, res, next) => {
     if (!token) {
       return next(new ErrorResponse('refresh_token is required', 400));
     }
+    if (!refreshTokens.includes(token)) {
+      return next(new ErrorResponse('Token is not valid', 403));
+    }
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    refreshTokens.filter((check) => check !== token);
     const { _id } = decoded;
     req.user = await User.findById(_id);
     req.refresh_token = token;

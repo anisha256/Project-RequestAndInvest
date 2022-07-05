@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 // define schema level methods to create access token and refresh token
@@ -64,12 +64,12 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.getAuthToken = function () {
   const user = this;
   const accessToken = jwt.sign(
-    { _id: user.id, email: user.email },
+    { _id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '2d' }
+    { expiresIn: '20s' }
   );
   const refreshToken = jwt.sign(
-    { _id: user.id, email: user.email },
+    { _id: user.id, role: user.role },
     process.env.JWT_REFRESH_SECRET,
     { expiresIn: '30d' }
   );
@@ -80,9 +80,9 @@ userSchema.methods.refreshAuthToken = function () {
   const user = this;
   console.log(user);
   const accessToken = jwt.sign(
-    { _id: user.id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
+    { _id: user.id, role: user.role },
+    process.env.JWT_SECRET
+    // { expiresIn: '20s' }
   );
   console.log(accessToken);
   return { accessToken };
