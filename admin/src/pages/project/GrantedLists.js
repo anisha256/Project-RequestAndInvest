@@ -11,9 +11,9 @@ import {
   Paper,
 } from '@mui/material';
 import axios from 'axios';
-import Spinner from '../components/Spinner';
-
-const User = () => {
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Spinner from '../../components/Spinner';
+const GrantedLists = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleChangePage = (event, newPage) => {
@@ -24,13 +24,13 @@ const User = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const [users, setUsers] = useState([]);
+  const [grantedLists, setGrantedLists] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUsers = async () => {
+  const fetchProjects = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/api/admin/user/lists',
+        'http://localhost:5000/api/admin/project/lists/accepted',
         {
           headers: {
             'content-type': 'application/json',
@@ -38,46 +38,52 @@ const User = () => {
           },
         }
       );
-      setUsers(data.data);
+      setGrantedLists(data.data);
       setLoading(false);
-      console.log(users);
+      console.log(grantedLists);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    fetchUsers();
+    fetchProjects();
   }, []);
 
   return (
-    <UserContainer>
+    <ProjectsContainer>
       {loading && <Spinner />}
+
       {!loading && (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer sx={{ maxHeight: 600 }}>
+          <TableContainer
+          //  sx={{ maxHeight: 600 }}
+          >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
-                <TableRow style={{ backgroundColor: 'transparent' }}>
+                <TableRow>
                   <TableCell align="left" style={{ minWidth: 20 }}>
-                    UserName
+                    Project Name
                   </TableCell>
                   <TableCell align="left" style={{ minWidth: 20 }}>
                     Email
                   </TableCell>
 
                   <TableCell align="left" style={{ minWidth: 20 }}>
-                    Status
+                    Country
+                  </TableCell>
+                  <TableCell align="center" style={{ minWidth: 20 }}>
+                    Team Experience
+                  </TableCell>
+                  <TableCell align="center" style={{ minWidth: 20 }}>
+                    Fulltime Workers
                   </TableCell>
                   <TableCell align="left" style={{ minWidth: 20 }}>
-                    Updated on
-                  </TableCell>
-                  <TableCell align="left" style={{ minWidth: 20 }}>
-                    Joined on
+                    Website URL
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users
+                {grantedLists
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
@@ -87,26 +93,31 @@ const User = () => {
                         tabIndex={-1}
                         key={row._id}
                       >
-                        <TableCell align="left">{row.username}</TableCell>
+                        {' '}
+                        <TableCell align="left">{row.projectName}</TableCell>
                         <TableCell align="left">{row.email}</TableCell>
-
-                        <TableCell align="left">
-                          {row.isDeactivated === true
-                            ? 'Deactivated'
-                            : 'Active'}
+                        <TableCell align="left">{row.country}</TableCell>
+                        <TableCell align="center">
+                          {row.teamExperience}
                         </TableCell>
-
-                        <TableCell align="left">
-                          {' '}
-                          {row.updatedAt
-                            ? `${row.updatedAt.slice(0, 10)}`
-                            : '-'}{' '}
+                        <TableCell align="center">
+                          {row.fullTimeWorker}
                         </TableCell>
-
                         <TableCell align="left">
-                          {row.createdAt
-                            ? `${row.createdAt.slice(0, 10)}`
-                            : '-'}{' '}
+                          ${row.websiteUrl.slice(0, 6)}...$
+                          {row.websiteUrl.slice(row.websiteUrl.length - 6)}
+                          {row.websiteUrl ? (
+                            <CopyButton
+                              style={{ height: '10px' }}
+                              onClick={() => {
+                                navigator.clipboard.writeText(row.websiteUrl);
+                              }}
+                            >
+                              <ContentCopyIcon />
+                            </CopyButton>
+                          ) : (
+                            ''
+                          )}
                         </TableCell>
                       </TableRow>
                     );
@@ -117,7 +128,7 @@ const User = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={users.length}
+            count={grantedLists.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -125,13 +136,13 @@ const User = () => {
           />
         </Paper>
       )}
-    </UserContainer>
+    </ProjectsContainer>
   );
 };
 
-export default User;
+export default GrantedLists;
 
-const UserContainer = styled.div`
+const ProjectsContainer = styled.div`
   flex: 4;
   background-image: linear-gradient(
     to top,
@@ -148,4 +159,12 @@ const UserContainer = styled.div`
     #eedffa,
     #fcf7ff
   );
+`;
+
+const CopyButton = styled.button`
+  padding-bottom: 20px;
+  font-size: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
 `;

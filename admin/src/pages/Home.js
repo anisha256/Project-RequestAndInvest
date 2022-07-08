@@ -1,15 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import home from '../assets/home.png';
 
 const Home = () => {
-  return <HomeContainer>Home</HomeContainer>;
+  return (
+    <HomeContainer>
+      <Photo1 src={home} />
+    </HomeContainer>
+  );
 };
 
 export default Home;
+const Photo1 = styled.img``;
 
 const HomeContainer = styled.div`
   flex: 4;
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     to top,
     #564480,
     #634f93,
@@ -23,5 +29,5 @@ const HomeContainer = styled.div`
     #dfc8f5,
     #eedffa,
     #fcf7ff
-  );
+  ); */
 `;

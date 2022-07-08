@@ -11,64 +11,102 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-import { Link, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    try {
+      // const { data } = await axios.delete('http://localhost:5000/api/logout', {
+      //   headers: {
+      //     'content-type': 'application/json',
+      //     refresh_token: localStorage.getItem('refreshToken'),
+      //   },
+      // });
+      // console.log(data.message);
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('role');
+      localStorage.removeItem('_id');
+
+      console.log('logout successfully');
+      navigate('/auth');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <SidebarContainer>
       <SidebarWrapper>
         <SidebarMenu>
           <h3>Dashboard</h3>
           <ul>
-            <li>
-              <SidebarIcon>
-                <DashboardIcon />
-              </SidebarIcon>
-              <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-              <SidebarIcon>
-                <AdminPanelSettingsIcon />
-              </SidebarIcon>
-              <NavLink to="/admins">Admins</NavLink>
-            </li>
+            <NavLink to="/">
+              <li>
+                <SidebarIcon>
+                  <DashboardIcon />
+                </SidebarIcon>
+                Home
+              </li>
+            </NavLink>
 
-            <li>
-              <SidebarIcon>
-                <PeopleAltIcon />
-              </SidebarIcon>
-              <NavLink to="/users">Users</NavLink>
-            </li>
+            <NavLink to="/admins">
+              {' '}
+              <li>
+                <SidebarIcon>
+                  <AdminPanelSettingsIcon />
+                </SidebarIcon>
+                Admins
+              </li>
+            </NavLink>
+
+            <NavLink to="/users">
+              <li>
+                <SidebarIcon>
+                  <PeopleAltIcon />
+                </SidebarIcon>
+                Users
+              </li>
+            </NavLink>
           </ul>
         </SidebarMenu>
         <SidebarMenu>
           <h3>Project</h3>
           <ul>
-            <li>
-              <SidebarIcon>
-                <ArticleIcon />
-              </SidebarIcon>
-              <NavLink to="/projects">Projects</NavLink>
-            </li>
-            <li>
-              <SidebarIcon>
-                <RequestQuoteIcon />
-              </SidebarIcon>
-              Requests
-            </li>
+            <NavLink to="/projects">
+              <li>
+                <SidebarIcon>
+                  <ArticleIcon />
+                </SidebarIcon>
+                Projects
+              </li>
+            </NavLink>
+            <NavLink to="/project/requested">
+              {' '}
+              <li>
+                <SidebarIcon>
+                  <RequestQuoteIcon />
+                </SidebarIcon>
+                Requests
+              </li>
+            </NavLink>
 
-            <li>
-              <SidebarIcon>
-                <CheckBoxIcon />
-              </SidebarIcon>
-              Granted
-            </li>
-            <li>
-              <SidebarIcon>
-                <CancelIcon />
-              </SidebarIcon>
-              Rejected
-            </li>
+            <NavLink to="/project/granted">
+              <li>
+                <SidebarIcon>
+                  <CheckBoxIcon />
+                </SidebarIcon>
+                Granted
+              </li>
+            </NavLink>
+            <NavLink to="/project/rejected">
+              <li>
+                <SidebarIcon>
+                  <CancelIcon />
+                </SidebarIcon>
+                Rejected
+              </li>
+            </NavLink>
           </ul>
         </SidebarMenu>
         <SidebarMenu>
@@ -85,17 +123,20 @@ const Sidebar = () => {
         <SidebarMenu>
           <h3>Settings</h3>
           <ul>
-            <li>
-              <SidebarIcon>
-                <DeleteIcon />
-              </SidebarIcon>
-              Delete Admin
-            </li>
+            <NavLink to="/delete">
+              <li>
+                <SidebarIcon>
+                  <DeleteIcon />
+                </SidebarIcon>
+                Delete
+              </li>
+            </NavLink>
+
             <li>
               <SidebarIcon>
                 <LogoutIcon />
               </SidebarIcon>
-              Logout
+              <LogoutButton onClick={handleClick}>Logout</LogoutButton>
             </li>
           </ul>
         </SidebarMenu>
@@ -153,4 +194,10 @@ const SidebarContainer = styled.div`
   -moz-box-shadow: 10px 4px 15px -6px rgba(227, 217, 217, 0.75);
   position: sticky;
   top: 60px;
+`;
+const LogoutButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
 `;

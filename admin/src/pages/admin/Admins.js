@@ -11,9 +11,9 @@ import {
   Paper,
 } from '@mui/material';
 import axios from 'axios';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import Spinner from '../components/Spinner';
-const Projects = () => {
+import Spinner from '../../components/Spinner';
+
+const Admins = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleChangePage = (event, newPage) => {
@@ -24,13 +24,13 @@ const Projects = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const [projects, setProjects] = useState([]);
+  const [adminLists, setAdminLists] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProjects = async () => {
+  const fetchAdmins = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/api/admin/project/lists',
+        'http://localhost:5000/api/admin/lists',
         {
           headers: {
             'content-type': 'application/json',
@@ -38,51 +38,47 @@ const Projects = () => {
           },
         }
       );
-      setProjects(data.data);
+      setAdminLists(data.data);
       setLoading(false);
-      console.log(Projects);
+      console.log(Admins);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    fetchProjects();
+    fetchAdmins();
   }, []);
 
   return (
-    <ProjectsContainer>
+    <AdminsContainer>
       {loading && <Spinner />}
-
       {!loading && (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer
-          //  sx={{ maxHeight: 600 }}
+          // sx={{ maxHeight: 600 }}
           >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
+                  <TableCell align="left" style={{ minWidth: 20 }}>
                     Email
                   </TableCell>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
-                    ProjectsName
+                  <TableCell align="left" style={{ minWidth: 20 }}>
+                    Username
                   </TableCell>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
-                    Country
+                  <TableCell align="left" style={{ minWidth: 20 }}>
+                    Status
                   </TableCell>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
-                    Team Experience
+                  <TableCell align="left" style={{ minWidth: 20 }}>
+                    Updated on
                   </TableCell>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
-                    Website URL
-                  </TableCell>
-                  <TableCell align="left" style={{ minWidth: 50 }}>
-                    Fulltime Workers
+                  <TableCell align="left" style={{ minWidth: 20 }}>
+                    Joined on
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {projects
+                {adminLists
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
@@ -93,26 +89,25 @@ const Projects = () => {
                         key={row._id}
                       >
                         <TableCell align="left">{row.email}</TableCell>
-                        <TableCell align="left">{row.projectName}</TableCell>
-                        <TableCell align="left">{row.country}</TableCell>
-                        <TableCell align="left">{row.teamExperience}</TableCell>
-                        <TableCell align="left">
-                          ${row.websiteUrl.slice(0, 6)}...$
-                          {row.websiteUrl.slice(row.websiteUrl.length - 6)}
-                          {row.websiteUrl ? (
-                            <CopyButton
-                              style={{ height: '10px' }}
-                              onClick={() => {
-                                navigator.clipboard.writeText(row.websiteUrl);
-                              }}
-                            >
-                              <ContentCopyIcon />
-                            </CopyButton>
-                          ) : (
-                            ''
-                          )}
+                        <TableCell align="left">{row.username}</TableCell>
+                        <TableCell align="left" style={{ minHeight: 50 }}>
+                          {row.isDeactivated === true
+                            ? 'Deactivated'
+                            : 'Active'}
                         </TableCell>
-                        <TableCell align="left">{row.fullTimeWorker}</TableCell>
+
+                        <TableCell align="left">
+                          {' '}
+                          {row.updatedAt
+                            ? `${row.updatedAt.slice(0, 10)}`
+                            : '-'}{' '}
+                        </TableCell>
+
+                        <TableCell align="left">
+                          {row.createdAt
+                            ? `${row.createdAt.slice(0, 10)}`
+                            : '-'}{' '}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -122,7 +117,7 @@ const Projects = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={Projects.length}
+            count={adminLists.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -130,13 +125,13 @@ const Projects = () => {
           />
         </Paper>
       )}
-    </ProjectsContainer>
+    </AdminsContainer>
   );
 };
 
-export default Projects;
+export default Admins;
 
-const ProjectsContainer = styled.div`
+const AdminsContainer = styled.div`
   flex: 4;
   background-image: linear-gradient(
     to top,
@@ -153,12 +148,4 @@ const ProjectsContainer = styled.div`
     #eedffa,
     #fcf7ff
   );
-`;
-
-const CopyButton = styled.button`
-  padding-bottom: 20px;
-  font-size: 10px;
-  cursor: pointer;
-  border: none;
-  background: none;
 `;
