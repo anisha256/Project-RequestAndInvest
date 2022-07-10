@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import axios from 'axios';
 import { userExists } from '../Constants';
 
 const Navbar = () => {
@@ -14,21 +13,23 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate('/register');
   };
-  const handleLogout = async (e) => {
-    e.preventDefault();
+  const handleLogout = async () => {
     try {
-      const config = {
-        headers: {
-          'content-type': 'application/json',
-          refresh_token: `${localStorage.getItem('refreshToken')}`,
-        },
-      };
-      await axios.delete('http://localhost:5000/api/logout', config);
+      // const { data } = await axios.delete('http://localhost:5000/api/logout', {
+      //   headers: {
+      //     'content-type': 'application/json',
+      //     refresh_token: localStorage.getItem('refreshToken'),
+      //   },
+      // });
+      // console.log(data.message);
       localStorage.removeItem('refreshToken');
-      navigate('/login');
-    } catch (error) {}
+      console.log('logout successfully');
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
-
+  // console.log(userExists());
   return (
     <>
       <Nav>
@@ -38,37 +39,54 @@ const Navbar = () => {
           </h2>
         </NavLeft>
         <NavCenter>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/feed">Feed</NavLink>
-          <NavLink to="/apply/project">Apply</NavLink>
+          {userExists() && <NavLink to="/feed">Feed</NavLink>}
+
+          {userExists() ? (
+            <NavLink to="/apply/project">Apply</NavLink>
+          ) : (
+            <NavLink to="/">Home</NavLink>
+          )}
         </NavCenter>
         <NavRight>
-          <NavLink to="/login">
-            <Button>Login</Button>
-          </NavLink>
-          <NavLink to="/register">
-            <Button>Register</Button>
-          </NavLink>
+          {userExists() ? (
+            // <Button onClick={logoutUser}>Logout</Button>
+            <Button onClick={handleLogout}>Logout</Button>
+          ) : (
+            <Button onClick={handleLogin}>Login</Button>
+          )}
+          {!userExists() && <Button onClick={handleRegister}>Register</Button>}
         </NavRight>
         <Hambuger>
           <GiHamburgerMenu onClick={() => setSetMediaIcon(!showMediaIcon)} />
           {showMediaIcon && (
             <MobileMenu>
-              <NavLink to="/">
-                <Div>Home</Div>
-              </NavLink>
-              <NavLink to="/feed">
-                <Div>Feed</Div>
-              </NavLink>
-              <NavLink to="/apply/project">
-                <Div>Apply</Div>
-              </NavLink>
+              {userExists() && (
+                <NavLink to="/feed">
+                  <Div>Feed</Div>
+                </NavLink>
+              )}
+              {userExists() ? (
+                <NavLink to="/apply/project">
+                  <Div>Apply</Div>
+                </NavLink>
+              ) : (
+                <NavLink to="/">
+                  <Div>Home</Div>
+                </NavLink>
+              )}
+              {userExists() && (
+                <NavLink to="/profile">
+                  <Div>Profile</Div>
+                </NavLink>
+              )}
               <ButtonDiv>
-                <Button onClick={handleRegister}>Register</Button>
-
+                {!userExists() && (
+                  <Button onClick={handleRegister}>Register</Button>
+                )}
                 {!userExists() ? (
                   <Button onClick={handleLogin}>Login</Button>
                 ) : (
+                  // <Button onClick={logoutUser}>Logout</Button>
                   <Button onClick={handleLogout}>Logout</Button>
                 )}
               </ButtonDiv>

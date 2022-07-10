@@ -1,87 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState([]);
-  const [loginData, setLoginData] = useState({
+  const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
   });
-
   const handleChange = (e) => {
-    setLoginData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-  const handleRefreshToken = async () => {
-    try {
-      const config = {
-        headers: {
-          'content-type': 'application/json',
-          refresh_token: `${localStorage.getItem('refreshToken')}`,
-        },
-      };
-      const { data } = await axios.get(
-        'http://localhost:5000/api/refresh',
-        config
-      );
-      const { accessToken } = data.data;
-      console.log('new access token :', accessToken);
-      localStorage.setItem('accessToken', accessToken);
-    } catch (error) {}
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submitted');
     try {
       const config = {
         headers: {
           'content-type': 'application/json',
         },
       };
-      const { data } = await axios.post(
-        'http://localhost:5000/api/login',
-        loginData,
+      const data = await axios.post(
+        'http://localhost:5000/api/auth/user/register',
+        formData,
         config
       );
-      // console.log(data.data);
-      const { userid, username, refreshToken, role, email, accessToken } =
-        data.data;
-      setUser({
-        userid: userid,
-        username: username,
-        refreshToken: refreshToken,
-        role: role,
-        email: email,
-      });
-      console.log('login refreshtoken', refreshToken);
-      console.log('login accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('role', role);
-      localStorage.setItem('_id', userid);
+      console.log(data);
+      toast.success('Registered successful', { autoClose: 2000 });
+    } catch (error) {}
 
-      handleRefreshToken();
-      toast.success('login successful', { autoClose: 2000 });
-      navigate('/profile');
-    } catch (error) {
-      toast.error('Invalid Credentials', { autoClose: 2000 });
-    }
-    console.log(user);
+    // navigate('/');
   };
-
   return (
     <>
       <Container>
+        {/* {loading && <Spinner />} */}
         <FormWrapper>
-          <LoginForm onSubmit={handleSubmit}>
-            <h2>Login</h2>
+          <RegisterForm onSubmit={handleSubmit}>
+            <h2>Register</h2>
 
+            <InputC>
+              <label>Username</label>
+              <Input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Enter the username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </InputC>
             <InputC>
               <label>Email</label>
               <Input
@@ -89,7 +63,7 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Enter the email"
-                value={loginData.email}
+                value={formData.email}
                 onChange={handleChange}
               />
             </InputC>
@@ -100,32 +74,32 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Enter the password"
-                value={loginData.password}
+                value={formData.password}
                 onChange={handleChange}
               />
             </InputC>
             <InputC>
-              <Button type="submit">Login</Button>
+              <Button type="submit">Register</Button>
             </InputC>
-          </LoginForm>
+          </RegisterForm>
         </FormWrapper>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
       </Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };
 
-export default Login;
+export default Register;
 const Container = styled.div`
   color: #564480;
   min-height: 100vh;
@@ -155,7 +129,7 @@ const FormWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-const LoginForm = styled.form`
+const RegisterForm = styled.form`
   /* height: 300px;
   width: 400px; */
   padding: 20px;
