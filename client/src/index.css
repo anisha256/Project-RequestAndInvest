@@ -6,10 +6,6 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
-}
 a {
   text-decoration: none;
 }

@@ -44,9 +44,6 @@ const Feed = () => {
           </Avatarmenu>
           <Menu>
             <MenuBox>
-              <NavLink to={'/drafts'}>Drafts</NavLink>
-            </MenuBox>
-            <MenuBox>
               <NavLink to={'/drafts/table'}>DraftTable</NavLink>
             </MenuBox>
             <MenuBox>

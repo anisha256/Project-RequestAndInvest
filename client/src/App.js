@@ -8,7 +8,8 @@ import Profile from './pages/profile/Profile';
 import Feed from './pages/Feed';
 import Form from './pages/Form';
 import EditProfile from './pages/profile/EditProfile';
-import Drafts from './pages/draft/Drafts';
+import DraftTable from './pages/draft/DraftTable';
+import DraftDetail from './pages/draft/DraftDetail';
 
 function App() {
   return (
@@ -26,7 +27,9 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/apply/project" element={<RequestForm />} />
-            <Route path="/drafts" element={<Drafts />} />
+            <Route path="/drafts/table" element={<DraftTable />} />
+            <Route path="/drafts/table/:id/details" element={<DraftDetail />} />
+            <Route path="/draft/:id/edit" element={<RequestForm />} />
           </Routes>
         </div>
       </Router>
