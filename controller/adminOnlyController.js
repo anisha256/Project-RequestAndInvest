@@ -19,7 +19,12 @@ const adminList = async (req, res) => {
 };
 const grantProject = async (req, res) => {
   const project = await Project.findById(req.params.id);
-  if (project.isRequested === true && project.isDraft === false) {
+  if (
+    project.isRequested === true &&
+    project.isDraft === false &&
+    project.isGranted === false &&
+    project.isRejected === false
+  ) {
     try {
       project.isGranted = true;
       await project.save();
@@ -78,6 +83,34 @@ const listAllProjectRequests = async (req, res) => {
     data: project,
   });
 };
+
+const getProjectById = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      data: project,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      statusCode: 404,
+      data: error,
+    });
+  }
+};
+
+const listRequestedProjects = async (req, res) => {
+  const project = await Project.find({
+    $and: [{ isRequested: true }, { isRejected: false }, { isGranted: false }],
+  });
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    data: project,
+  });
+};
 const listAcceptedProjects = async (req, res) => {
   const project = await Project.find({ isGranted: true });
   res.status(200).json({
@@ -103,4 +136,6 @@ module.exports = {
   listAllProjectRequests,
   listRejectedProjects,
   listAcceptedProjects,
+  listRequestedProjects,
+  getProjectById,
 };

@@ -19,7 +19,7 @@ const {
 
 router.route('/auth/user/register').post(userRegister);
 router.route('/auth/superAdminregister').post(superAdminRegister);
-router.route('/deactivate/:id').post(protect, deactivateUser);
+router.route('/:id/deactivate').post(protect, deactivateUser);
 router.route('/verify-email').get(verifyEmail);
 
 router.route('/login').get((req, res) => {

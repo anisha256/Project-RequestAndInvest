@@ -66,7 +66,7 @@ userSchema.methods.getAuthToken = function () {
   const accessToken = jwt.sign(
     { _id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '20s' }
+    { expiresIn: '2d' }
   );
   const refreshToken = jwt.sign(
     { _id: user.id, role: user.role },
@@ -79,13 +79,13 @@ userSchema.methods.refreshAuthToken = function () {
   console.log('hughmiuhmjh');
   const user = this;
   console.log(user);
-  const accessToken = jwt.sign(
+  const newaccessToken = jwt.sign(
     { _id: user.id, role: user.role },
-    process.env.JWT_SECRET
-    // { expiresIn: '20s' }
+    process.env.JWT_SECRET,
+    { expiresIn: '2d' }
   );
-  console.log(accessToken);
-  return { accessToken };
+  console.log(newaccessToken);
+  return { newaccessToken };
 };
 const User = mongoose.model('User', userSchema);
 module.exports = User;

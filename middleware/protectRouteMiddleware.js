@@ -69,19 +69,27 @@ const protect = asyncHandler(async (req, res, next) => {
   if (!token) {
     return next(new ErrorResponse('Not authorized to access this route', 401));
   }
+  const currentDate = new Date();
+  console.log(currentDate);
+
   // check if access token is expired or not
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(`dec${decoded}`);
-    // console.log(decoded);
+    console.log(decoded);
     // destructure
-    const { _id } = decoded;
+    const { _id, role, exp } = decoded;
     // console.log(_id);
-    const user = await User.findById(_id);
+    const user = await User.findOne({ _id, role });
     // console.log('user', user);
     if (!user) {
       return next(new ErrorResponse('No user found with this id', 404));
     }
+    // check if token is expired or not
+    if (exp * 1000 < currentDate.getTime()) {
+      return next(new ErrorResponse('token is expired', 404));
+    }
+
     req.user = user;
     return next();
   } catch (error) {
@@ -99,7 +107,7 @@ const refreshTokenReq = async (req, res, next) => {
       return next(new ErrorResponse('Token is not valid', 403));
     }
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    refreshTokens.filter((check) => check !== token);
+    // refreshTokens.filter((check) => check !== token);
     const { _id } = decoded;
     req.user = await User.findById(_id);
     req.refresh_token = token;

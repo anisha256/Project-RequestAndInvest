@@ -34,7 +34,7 @@ const userRegister = async (req, res, next) => {
   // check if user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
+    res.status(403);
     throw new Error('User already exists');
   }
 
@@ -96,7 +96,6 @@ const login = async (req, res, next) => {
   if (!email && !password) {
     return next(new ErrorResponse('Please provide email and password', 400));
   }
-
   try {
     const user = await User.findOne({ email }).select('+password');
     console.log(user);
@@ -106,14 +105,14 @@ const login = async (req, res, next) => {
     const isMatch = await user.matchPassword(password);
     console.log(isMatch);
     if (!isMatch) {
-      return next(new ErrorResponse(`Invalid Credentials`, 401));
+      return next(new ErrorResponse(`Password didnot match`, 402));
     }
     if (
       user.role === 'Admin' ||
       user.role === 'User' ||
       user.role === 'SuperAdmin'
     ) {
-      const token = user.getAuthToken();
+      const token = await user.getAuthToken();
       const { accessToken, refreshToken } = token;
       refreshTokens.push(refreshToken);
       res.status(200).json({
@@ -165,7 +164,7 @@ const refresh = async (req, res) => {
     status: 'success',
     message: 'Token refresh successfully',
     data: {
-      accessToken: token.accessToken,
+      accessToken: token.newaccessToken,
       // refresh_token: req.header('refresh_token'),
     },
   });
