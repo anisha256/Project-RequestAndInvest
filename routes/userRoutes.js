@@ -32,10 +32,7 @@ router
   .route('/project/drafts/:userid/submitted/lists')
   .get(protect, listsOfDraftsSubmittedByUser);
 
-router
-  .route('/project/draft/:id')
-  .put(protect, editDraft)
-  .post(protect, submitDraft);
+router.route('/project/draft/:id').put(editDraft).post(protect, submitDraft);
 // .delete(protect, deleteDraft);
 
 module.exports = router;

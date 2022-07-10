@@ -43,14 +43,19 @@ const RequestForm = () => {
     projectVision: '',
     additionalInfo: '',
   });
+
   const handleChange = (e) => {
-    setDraftDetail({ [e.target.name]: e.target.value });
+    setDraftDetail((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
 
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('file submit');
@@ -113,12 +118,15 @@ const RequestForm = () => {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const edited = await axiosJWT.put(`/api/user/project/draft/${id}`, {
-        headers: {
-          'content-type': 'application/json',
-          access_token: localStorage.getItem('accessToken'),
-        },
-      });
+      const edited = await axiosJWT.put(
+        `http://localhost:5000/api/user/project/draft/${id}`,
+        {
+          headers: {
+            'content-type': 'application/json',
+            // access_token: localStorage.getItem('accessToken'),
+          },
+        }
+      );
 
       console.log('edditing successful', edited.data.data);
       toast.success('edited successfully', { autoClose: 2000 });

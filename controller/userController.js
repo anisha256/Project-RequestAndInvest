@@ -34,6 +34,7 @@ const getProfileById = async (req, res, next) => {
   }
   next();
 };
+
 const editProfile = async (req, res, next) => {
   try {
     const updatedProfile = await User.findByIdAndUpdate(
