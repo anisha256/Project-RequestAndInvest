@@ -78,7 +78,7 @@ const RequestLists = () => {
         {
           headers: {
             'content-type': 'application/json',
-            access_token: localStorage.getItem('accessToken'),
+            // access_token: localStorage.getItem('accessToken'),
           },
         }
       );
@@ -140,7 +140,7 @@ const RequestLists = () => {
                               navigate(`/project/requested/${row._id}/detail`);
                             }}
                             align="left"
-                            style={{ color: 'blue' }}
+                            style={{ color: 'blue', cursor: 'pointer' }}
                           >
                             {row.projectName}
                           </TableCell>

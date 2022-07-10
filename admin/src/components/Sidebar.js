@@ -23,11 +23,7 @@ const Sidebar = () => {
       //     refresh_token: localStorage.getItem('refreshToken'),
       //   },
       // });
-      // console.log(data.message);
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('role');
-      localStorage.removeItem('_id');
+      localStorage.clear();
 
       console.log('logout successfully');
       navigate('/auth');

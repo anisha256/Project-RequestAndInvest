@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PersonIcon from '@mui/icons-material/Person';
 import ArticleIcon from '@mui/icons-material/Article';
 import ApartmentIcon from '@mui/icons-material/Apartment';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
+/**
+ * @desc fetch the individual project and render the data accordingly
+ *
+ */
 const Detail = () => {
+  const { id } = useParams();
+  const [projectDetail, setProjectDetai] = useState([]);
+
+  //calls the api and fetch individual project detail
+  const fetchProjectById = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/api/admin/project/${id}/get`,
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+      );
+      console.log(data.data);
+      setProjectDetai(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjectById();
+  }, []);
+
   return (
     <DetailContainer>
       <DetailContent>
@@ -19,18 +50,18 @@ const Detail = () => {
               </Icon>
 
               <label>First Name </label>
-              <p></p>
+              <p>{projectDetail.firstName}</p>
               <label>Last Name </label>
-              <p></p>
+              <p>{projectDetail.lastName}</p>
               <label>Email</label>
-              <p></p>
+              <p>{projectDetail.email}</p>
               <label>Telegram Username</label>
-              <p></p>
+              <p>{projectDetail.telegramUsername}</p>
 
               <label>Country</label>
-              <p></p>
+              <p>{projectDetail.country}</p>
               <label>City</label>
-              <p></p>
+              <p>{projectDetail.city}</p>
             </ApplicantDetails>
             <WorkplaceDetails>
               <Icon>
@@ -42,14 +73,14 @@ const Detail = () => {
                 />
               </Icon>
               <label>website URL</label>
-              <p></p>
+              <p>{projectDetail.websiteUrl}</p>
 
               <label>Number of fulltime Worker</label>
-              <p></p>
+              <p>{projectDetail.fullTimeWorker}</p>
               <label>Team Experience</label>
-              <p></p>
+              <p>{projectDetail.teamExperience}</p>
               <label>Team Linkedin Profiles</label>
-              <p></p>
+              <p>{projectDetail.linkedinProfiles}</p>
             </WorkplaceDetails>
           </Left>
           <Right>
@@ -64,16 +95,16 @@ const Detail = () => {
               </Icon>
               <label>Project Name</label>
 
-              <p></p>
+              <p>{projectDetail.projectName}</p>
               <label>Project Type</label>
-              <p></p>
+              <p>{projectDetail.projectType}</p>
               <label>Description</label>
-              <p></p>
+              <p>{projectDetail.description}</p>
 
               <label>Project Vision</label>
-              <p></p>
+              <p>{projectDetail.projectVision}</p>
               <label>Additional Information</label>
-              <p></p>
+              <p>{projectDetail.additionalInfo}</p>
             </ProjectDetails>
           </Right>
         </Title>
