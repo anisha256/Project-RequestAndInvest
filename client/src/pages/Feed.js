@@ -50,7 +50,7 @@ const Feed = () => {
               <NavLink to={'/drafts/table'}>DraftTable</NavLink>
             </MenuBox>
             <MenuBox>
-              <NavLink to={'/old/profile'}>Profile</NavLink>
+              <NavLink to={'/profile'}>Profile</NavLink>
             </MenuBox>
             <MenuBox>
               <NavLink to={'/apply/project'}>Apply</NavLink>
@@ -108,7 +108,7 @@ const Feed = () => {
                 </Content>
 
                 <Content>
-                  <h3>Team Lead</h3>
+                  w<h3>Team Lead</h3>
                   <p>
                     {grantProject.firstName}
                     {grantProject.lastName}

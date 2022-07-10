@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { userExists } from '../Constants';
+import { userExists } from './Constants';
 
 const Navbar = () => {
   const navigate = useNavigate();

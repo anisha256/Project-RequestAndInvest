@@ -123,7 +123,7 @@ const Profile = () => {
               <NavLink to={'/drafts/table'}>DraftTable</NavLink>
             </MenuBox>
             <MenuBox>
-              <NavLink to={'/old/profile'}>Profile</NavLink>
+              <NavLink to={'/profile'}>Profile</NavLink>
             </MenuBox>
             <MenuBox>
               <NavLink to={'/apply/project'}>Apply</NavLink>

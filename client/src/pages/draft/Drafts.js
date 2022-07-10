@@ -4,7 +4,7 @@ import { FiX, FiSend } from 'react-icons/fi';
 import styled from 'styled-components';
 import avatar from '../../assets/1.png';
 import axios from 'axios';
-import Spinner from '../../components/spinner/Spinner';
+import Spinner from '../../components/Spinner';
 
 const Drafts = () => {
   const [draftLists, setDraftLists] = useState([]);
@@ -48,7 +48,7 @@ const Drafts = () => {
                 <NavLink to={'/drafts/table'}>DraftTable</NavLink>
               </MenuBox>
               <MenuBox>
-                <NavLink to={'/old/profile'}>Profile</NavLink>
+                <NavLink to={'/profile'}>Profile</NavLink>
               </MenuBox>
               <MenuBox>
                 <NavLink to={'/apply/project'}>Apply</NavLink>
