@@ -18,7 +18,9 @@ function App() {
         <Navbar />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Login />} />
+            {!localStorage.getItem('refreshItem') && (
+              <Route path="/" element={<Login />} />
+            )}
             <Route path="/register" element={<Register />} />
 
             <Route path="/form" element={<Form />} />

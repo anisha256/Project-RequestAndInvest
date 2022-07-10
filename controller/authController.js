@@ -4,6 +4,8 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const refreshTokens = [];
+
 const superAdminRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
   const role = 'SuperAdmin';
@@ -25,6 +27,7 @@ const superAdminRegister = async (req, res, next) => {
     return next(error);
   }
 };
+
 const userRegister = async (req, res, next) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -37,7 +40,6 @@ const userRegister = async (req, res, next) => {
     res.status(403);
     throw new Error('User already exists');
   }
-
   try {
     const user = await User.create({
       username,
@@ -71,6 +73,7 @@ const userRegister = async (req, res, next) => {
     return next(error);
   }
 };
+
 // We need to send an email to the user to verify the email after registration
 const verifyEmail = async (req, res, next) => {
   console.log(req.headers.host);
@@ -89,7 +92,6 @@ const verifyEmail = async (req, res, next) => {
     message: 'email verified successfully',
   });
 };
-const refreshTokens = [];
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -138,6 +140,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
 };
+
 const deactivateUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -155,27 +158,45 @@ const deactivateUser = async (req, res) => {
     });
   }
 };
+
 const refresh = async (req, res) => {
   const { user } = req;
   console.log(user);
-  const token = await user.refreshAuthToken();
-  console.log('new access token', token);
-  res.json({
-    status: 'success',
-    message: 'Token refresh successfully',
-    data: {
-      accessToken: token.newaccessToken,
-      // refresh_token: req.header('refresh_token'),
-    },
-  });
+  try {
+    const token = await user.refreshAuthToken();
+    console.log('new access token', token);
+    res.status(200).json({
+      success: true,
+      message: 'Token refresh successfully',
+      data: {
+        accessToken: token.newaccessToken,
+        // refresh_token: req.header('refresh_token'),
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      statusCode: 404,
+      data: error,
+    });
+  }
 };
+
 const logout = (req, res) => {
-  const refreshToken = req.refresh_token;
-  refreshTokens.filter((token) => token !== refreshToken);
-  res.json({
-    status: 'success',
-    message: 'User logout successfully',
-  });
+  try {
+    const refreshToken = req.refresh_token;
+    refreshTokens.filter((token) => token !== refreshToken);
+    res.status(200).json({
+      success: true,
+      message: 'User logout successfully',
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      statusCode: 404,
+      data: error,
+    });
+  }
 };
 
 module.exports = {

@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import { axiosJWT } from '../profile/Profile';
 
 const RequestForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [draftDetail, setDraftDetail] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    telegramUsername: '',
+    fullTimeWorker: '',
+    teamExperience: '',
+    linkedinProfiles: [],
+    websiteUrl: '',
+    country: '',
+    city: '',
+    projectName: '',
+    description: '',
+    projectType: '',
+    projectVision: '',
+    additionalInfo: '',
+  });
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -14,7 +33,8 @@ const RequestForm = () => {
     telegramUsername: '',
     fullTimeWorker: '',
     teamExperience: '',
-    linkedinProfiles: '',
+    linkedinProfiles: [],
+    websiteUrl: '',
     country: '',
     city: '',
     projectName: '',
@@ -24,16 +44,91 @@ const RequestForm = () => {
     additionalInfo: '',
   });
   const handleChange = (e) => {
+    setDraftDetail({ [e.target.name]: e.target.value });
+
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('login successful', { autoClose: 2000 });
-    navigate('/');
+    console.log('file submit');
+    try {
+      const { data } = await axiosJWT.post(
+        'http://localhost:5000/api/user/project/request',
+        formData,
+        {
+          headers: {
+            'content-type': 'application/json',
+            access_token: localStorage.getItem('accessToken'),
+          },
+        }
+      );
+
+      setFormData(data.data);
+      console.log('form submitted');
+      console.log('formdata:', formData);
+      toast.success('submit successful', { autoClose: 2000 });
+    } catch (error) {
+      console.log(error);
+    }
   };
+  const handleSave = async (e) => {
+    e.preventDefault();
+    console.log('save');
+    try {
+      const { data } = await axiosJWT.post(
+        'http://localhost:5000/api/user/project/draft',
+        formData,
+        {
+          headers: {
+            'content-type': 'application/json',
+            access_token: localStorage.getItem('accessToken'),
+          },
+        }
+      );
+      const res = data.data;
+      console.log('res', res);
+      setFormData(res);
+      console.log('form submitted');
+      toast.success(' Saved as Draft', { autoClose: 2000 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getDraftToBeEdited = async () => {
+    try {
+      const { data } = await axiosJWT.get(`/api/admin/project/${id}/get`, {
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+      setDraftDetail(data.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      const edited = await axiosJWT.put(`/api/user/project/draft/${id}`, {
+        headers: {
+          'content-type': 'application/json',
+          access_token: localStorage.getItem('accessToken'),
+        },
+      });
+
+      console.log('edditing successful', edited.data.data);
+      toast.success('edited successfully', { autoClose: 2000 });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+  useEffect(() => {
+    getDraftToBeEdited();
+  }, []);
   return (
     <>
       <Container>
@@ -52,9 +147,9 @@ const RequestForm = () => {
                 <label>First Name </label>
                 <Input
                   id="firstName"
-                  type="text"
+                  type="string"
                   name="firstName"
-                  value={formData.firstName}
+                  value={draftDetail.firstName}
                   onChange={handleChange}
                 />
               </InputField>
@@ -62,9 +157,9 @@ const RequestForm = () => {
                 <label>Last Name </label>
                 <Input
                   id="lastName"
-                  type="text"
+                  type="string"
                   name="lastName"
-                  value={formData.lastName}
+                  value={draftDetail.lastName}
                   onChange={handleChange}
                 />
               </InputField>
@@ -77,7 +172,7 @@ const RequestForm = () => {
                   id="email"
                   type="email"
                   name="email"
-                  value={formData.email}
+                  value={draftDetail.email}
                   onChange={handleChange}
                 />
               </InputField>
@@ -87,9 +182,9 @@ const RequestForm = () => {
                 <label>Telegram Username</label>
                 <Input
                   id="telegramUsername"
-                  type="text"
+                  type="string"
                   name="telegramUsername"
-                  value={formData.telegramUsername}
+                  value={draftDetail.telegramUsername}
                   onChange={handleChange}
                 />
               </InputField>
@@ -101,7 +196,7 @@ const RequestForm = () => {
                   id="fullTimeWorker"
                   type="number"
                   name="fullTimeWorker"
-                  value={formData.fullTimeWorker}
+                  value={draftDetail.fullTimeWorker}
                   onChange={handleChange}
                 />
               </InputField>
@@ -111,9 +206,33 @@ const RequestForm = () => {
                 <label>Team Experience</label>
                 <Input
                   id="teamExperience"
-                  type="text"
+                  type="string"
                   name="teamExperience"
-                  value={formData.teamExperience}
+                  value={draftDetail.teamExperience}
+                  onChange={handleChange}
+                />
+              </InputField>
+            </InputC>
+            <InputC>
+              <InputField>
+                <label>Linkedin Profiles</label>
+                <Input
+                  id="linkedinProfiles"
+                  type="string"
+                  name="linkedinProfiles"
+                  value={draftDetail.linkedinProfiles}
+                  onChange={handleChange}
+                />
+              </InputField>
+            </InputC>
+            <InputC>
+              <InputField>
+                <label>website URL</label>
+                <Input
+                  id="websiteUrl"
+                  type="string"
+                  name="websiteUrl"
+                  value={draftDetail.websiteUrl}
                   onChange={handleChange}
                 />
               </InputField>
@@ -123,9 +242,9 @@ const RequestForm = () => {
                 <label>Country</label>
                 <Options
                   id="country"
-                  type="text"
+                  type="string"
                   name="country"
-                  value={formData.country}
+                  value={draftDetail.country}
                   onChange={handleChange}
                 >
                   <option value="" hidden>
@@ -134,9 +253,9 @@ const RequestForm = () => {
                   <option value="layout 1">Nepal</option>
                   <option value="layout 2">China</option>
                   <option value="layout 3">France</option>
-                  <option value="layout 3">India</option>
-                  <option value="layout 3">Korea</option>
-                  <option value="layout 3">Thailand</option>
+                  <option value="layout 4">India</option>
+                  <option value="layout 5">Korea</option>
+                  <option value="layout 6">Thailand</option>
                   <option value="other">other</option>
                 </Options>
               </InputField>
@@ -145,9 +264,9 @@ const RequestForm = () => {
                 <label>City</label>
                 <Input
                   id="city"
-                  type="text"
+                  type="string"
                   name="city"
-                  value={formData.city}
+                  value={draftDetail.city}
                   onChange={handleChange}
                 />
               </InputField>
@@ -158,9 +277,9 @@ const RequestForm = () => {
                 <label>Project Name</label>
                 <Input
                   id="projectName"
-                  type="text"
+                  type="string"
                   name="projectName"
-                  value={formData.projectName}
+                  value={draftDetail.projectName}
                   onChange={handleChange}
                 />
               </InputField>
@@ -173,7 +292,7 @@ const RequestForm = () => {
                   id="description"
                   type="message"
                   name="description"
-                  value={formData.description}
+                  value={draftDetail.description}
                   onChange={handleChange}
                 />
               </InputField>
@@ -183,9 +302,9 @@ const RequestForm = () => {
                 <label>Project Type</label>
                 <Input
                   id="projectType"
-                  type="text"
+                  type="string"
                   name="projectType"
-                  value={formData.projectType}
+                  value={draftDetail.projectType}
                   onChange={handleChange}
                 />
               </InputField>
@@ -198,7 +317,7 @@ const RequestForm = () => {
                   id="projectVision"
                   type="message"
                   name="projectVision"
-                  value={formData.projectVision}
+                  value={draftDetail.projectVision}
                   onChange={handleChange}
                 />
               </InputField>
@@ -210,14 +329,30 @@ const RequestForm = () => {
                   id="additionalInfo"
                   type="message"
                   name="additionalInfo"
-                  value={formData.additionalInfo}
+                  value={draftDetail.additionalInfo}
                   onChange={handleChange}
                 />
               </InputField>
             </InputC>
 
             <InputC>
-              <Button type="submit">Submit</Button>
+              <InputField>
+                <Button type="submit" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </InputField>
+              {id && (
+                <InputField>
+                  <Button type="submit" onClick={handleEdit}>
+                    Edit
+                  </Button>
+                </InputField>
+              )}
+              <InputField>
+                <Button type="submit" onClick={handleSave}>
+                  Save
+                </Button>
+              </InputField>
             </InputC>
           </LoginForm>
         </FormWrapper>
@@ -240,7 +375,7 @@ const RequestForm = () => {
 export default RequestForm;
 const Container = styled.div`
   color: #564480;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -273,7 +408,7 @@ const LoginForm = styled.form`
   box-sizing: border-box;
   label {
     color: #564480;
-    text-align: left;
+    string-align: left;
   }
 `;
 const Button = styled.button`

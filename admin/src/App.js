@@ -19,7 +19,7 @@ function App() {
     <>
       <Router>
         <div>
-          {localStorage.getItem('role') && <Topbar />}
+          <Topbar />
           <div className="container">
             <Sidebar />
             <Routes>

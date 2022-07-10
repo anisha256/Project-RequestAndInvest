@@ -60,6 +60,7 @@ const createProjectDraft = asyncHandler(async (req, res) => {
     res.status(201).json({ success: false, ...req.body });
   }
 });
+
 const getDraftsOfUser = asyncHandler(async (req, res) => {
   const projects = await Project.find({ user: req.user.id });
   const savedDrafts = [];
@@ -82,6 +83,7 @@ const getDraftsOfUser = asyncHandler(async (req, res) => {
     });
   }
 });
+
 const editDraft = async (req, res, next) => {
   const updatedDraft = await Project.findByIdAndUpdate(
     req.params.id,
@@ -114,6 +116,7 @@ const editDraft = async (req, res, next) => {
 
   next();
 };
+
 const listsOfDraftsSubmittedByUser = asyncHandler(async (req, res) => {
   const drafts = await Project.find({ user: req.user.id });
   const submittedDrafts = [];
@@ -136,6 +139,7 @@ const listsOfDraftsSubmittedByUser = asyncHandler(async (req, res) => {
     });
   }
 });
+
 const submitDraft = async (req, res, next) => {
   const submitedDraft = await Project.findById(req.params.id);
   if (submitedDraft.isEdited === true && submitedDraft.isDraft === true) {
