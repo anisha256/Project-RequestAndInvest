@@ -22,7 +22,8 @@ const EditProfile = ({
     e.preventDefault();
 
     const { data } = await axiosJWT.put(
-      `http://localhost:5000/api/user/${id}/profile`,
+      `https://reziii.herokuapp.com/api/user/${id}/profile`,
+
       profileData,
       {
         headers: {

@@ -15,14 +15,14 @@ const Navbar = () => {
   };
   const handleLogout = async () => {
     try {
-      // const { data } = await axios.delete('http://localhost:5000/api/logout', {
+      // const { data } = await axios.delete('api/logout', {
       //   headers: {
       //     'content-type': 'application/json',
       //     refresh_token: localStorage.getItem('refreshToken'),
       //   },
       // });
       // console.log(data.message);
-      localStorage.removeItem('refreshToken');
+      localStorage.clearItem();
       console.log('logout successfully');
       navigate('/');
     } catch (error) {
@@ -40,12 +40,7 @@ const Navbar = () => {
         </NavLeft>
         <NavCenter>
           {userExists() && <NavLink to="/feed">Feed</NavLink>}
-
-          {userExists() ? (
-            <NavLink to="/apply/project">Apply</NavLink>
-          ) : (
-            <NavLink to="/">Home</NavLink>
-          )}
+          {userExists() && <NavLink to="/apply/project">Apply</NavLink>}
         </NavCenter>
         <NavRight>
           {userExists() ? (
@@ -65,13 +60,9 @@ const Navbar = () => {
                   <Div>Feed</Div>
                 </NavLink>
               )}
-              {userExists() ? (
+              {userExists() && (
                 <NavLink to="/apply/project">
                   <Div>Apply</Div>
-                </NavLink>
-              ) : (
-                <NavLink to="/">
-                  <Div>Home</Div>
                 </NavLink>
               )}
               {userExists() && (

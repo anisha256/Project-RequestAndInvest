@@ -17,7 +17,7 @@ const Feed = () => {
   const fetchGrantedProjects = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/api/admin/project/lists/accepted',
+        'https://reziii.herokuapp.com/api/admin/project/lists/accepted',
         {
           headers: {
             'content-type': 'application/json',
@@ -60,7 +60,7 @@ const Feed = () => {
           {/* <CKEditor
             config={{
               ckfinder: {
-                uploadUrl: 'http://localhost:5000/api/file/upload',
+                uploadUrl: 'https://reziii.herokuapp.com/api/file/upload',
               },
             }}
             editor={Editor}
@@ -105,7 +105,7 @@ const Feed = () => {
                 </Content>
 
                 <Content>
-                  w<h3>Team Lead</h3>
+                  <h3>Team Lead</h3>
                   <p>
                     {grantProject.firstName}
                     {grantProject.lastName}
@@ -262,6 +262,7 @@ const Title = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
   }
 `;
 
@@ -276,7 +277,9 @@ const Projects = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    width: 80%;
+    border-radius: 10px;
   }
 `;
 

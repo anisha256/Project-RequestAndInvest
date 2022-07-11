@@ -70,7 +70,7 @@ const Form = () => {
         },
       };
       await axios.post(
-        'http://localhost:5000/api/form/create',
+        'https://reziii.herokuapp.com/api/form/create',
         formData,
         config
       );
@@ -130,7 +130,7 @@ const Form = () => {
           <CKEditor
             config={{
               ckfinder: {
-                uploadUrl: 'http://localhost:5000/api/file/upload',
+                uploadUrl: 'https://request-and-invest.herokuapp.com/api/file/upload',
               },
             }}
             editor={Editor}
@@ -150,7 +150,7 @@ const Form = () => {
         <CKEditor
           config={{
             ckfinder: {
-              uploadUrl: 'http://localhost:5000/api/file/upload',
+              uploadUrl: 'https://reziii.herokuapp.com/api/file/upload',
             },
           }}
           editor={Editor}

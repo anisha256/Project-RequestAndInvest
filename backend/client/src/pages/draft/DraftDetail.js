@@ -14,11 +14,14 @@ const DraftDetail = () => {
 
   const fetchDraftDetailById = async () => {
     try {
-      const { data } = await axios.get(`/api/admin/project/${id}/get`, {
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
+      const { data } = await axios.get(
+        `https://reziii.herokuapp.com/api/admin/project/${id}/get`,
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+      );
       setDetail(data.data);
       setLoading(false);
     } catch (error) {
@@ -155,7 +158,8 @@ const Draft = styled.div`
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-
+  width: 80%;
+  margin: auto;
   label {
     font-weight: bolder;
     font-size: 17px;
@@ -171,17 +175,16 @@ const Draft = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 400px;
+    /* min-width: 400px; */
   }
 `;
 const Center = styled.section`
   display: grid;
   grid-column: 2/3;
-  height: 100%;
-  margin-top: 30px;
+  height: calc(100vh - 60px);
   border-left: 1px solid white;
   border-right: 1px solid white;
-  padding: 0px 40px;
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;

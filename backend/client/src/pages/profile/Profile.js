@@ -24,35 +24,33 @@ const Profile = () => {
 
   const access_token = localStorage.getItem('accessToken');
 
-  axiosJWT.interceptors.response.use(
-    async (config) => {
-      const user = jwt_decode(localStorage.getItem('accessToken'));
-      const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-      console.log(isExpired);
-      if (!isExpired) return config;
-      const { data } = await axios.get('http://localhost:5000/api/refresh', {
+  axiosJWT.interceptors.response.use(async (config) => {
+    const user = jwt_decode(localStorage.getItem('accessToken'));
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+    console.log(isExpired);
+    if (!isExpired) return config;
+    const { data } = await axios.get(
+      'https://reziii.herokuapp.com/api/refresh',
+      {
         headers: {
           'content-type': 'application/json',
           refresh_token: localStorage.getItem('refreshToken'),
         },
-      });
-      const { accessToken } = data.data;
-      console.log('newaccessToken', accessToken);
-      localStorage.setItem('accessToken', accessToken);
+      }
+    );
+    const { accessToken } = data.data;
+    console.log('newaccessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken);
 
-      config.headers.access_token = accessToken;
+    config.headers.access_token = accessToken;
 
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+    return config;
+  });
   const getProfileData = async () => {
     console.log('getprofile api');
     try {
       const { data } = await axiosJWT.get(
-        `http://localhost:5000/api/user/${id}/profile`,
+        `https://reziii.herokuapp.com/api/user/${id}/profile`,
         {
           headers: {
             'content-type': 'application/json',
@@ -73,12 +71,15 @@ const Profile = () => {
 
     try {
       if (profileData.isDeactivated === false) {
-        await axiosJWT.post(`http://localhost:5000/api/${id}/deactivate`, {
-          headers: {
-            'content-type': 'application/json',
-            access_token: localStorage.getItem('accessToken'),
-          },
-        });
+        await axiosJWT.post(
+          `https://reziii.herokuapp.com/api/${id}/deactivate`,
+          {
+            headers: {
+              'content-type': 'application/json',
+              access_token: localStorage.getItem('accessToken'),
+            },
+          }
+        );
         // toast.success('Your id is deactivated', { autoClose: 2000 });
       }
       localStorage.removeItem('refreshToken');
@@ -88,7 +89,7 @@ const Profile = () => {
   const fetchGrantedProjects = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/api/admin/project/lists/accepted',
+        'https://reziii.herokuapp.com/api/admin/project/lists/accepted',
         {
           headers: {
             'content-type': 'application/json',
@@ -132,10 +133,10 @@ const Profile = () => {
         <CenterDiv>
           <UserIntro>
             <Left>
-              <h1>User</h1>
-              <span>{profileData.email}</span>
+              <h1 style={{ color: '#2e2346' }}>User</h1>
+              <span style={{ color: '#2e2346' }}>{profileData.email}</span>
 
-              <span>
+              <span style={{ color: '#2e2346' }}>
                 joined on{' '}
                 {profileData.createdAt
                   ? `${profileData.createdAt.slice(0, 10)}`
@@ -147,14 +148,14 @@ const Profile = () => {
             </Right>
           </UserIntro>
           <Content>
-            <h1>Profile</h1>
-            <p>Your personal information</p>
+            <h1 style={{ color: '#2e2346' }}>Profile</h1>
+            <p style={{ color: '#2e2346' }}>Your personal information</p>
           </Content>
           <Combined>
             <Information>
               <Title>
-                <h1>Personal Information</h1>
-                <Edit onClick={handleEdit}>
+                <h1 style={{ color: '#2e2346' }}>Personal Information</h1>
+                <Edit onClick={handleEdit} style={{ color: '#2e2346' }}>
                   <FaUserEdit />
                 </Edit>
               </Title>
@@ -182,11 +183,13 @@ const Profile = () => {
 
             <Settings>
               <DContent>
-                <h1>Deactivate User</h1>
+                <h1 style={{ color: '#2e2346' }}>Deactivate User</h1>
               </DContent>
 
               <ButtonC>
-                <p>You can deactivate ur account</p>
+                <p style={{ color: '#2e2346' }}>
+                  You can deactivate ur account
+                </p>
 
                 <Button onClick={handleDeactivate}>Deactivate</Button>
               </ButtonC>
@@ -208,11 +211,8 @@ const Profile = () => {
 
 export default Profile;
 const Container = styled.div`
-  min-height: 100vh;
   display: grid;
-  /* grid-template-columns: 1fr 5.95fr; */
   grid-template-columns: 1fr 3.5fr 1.7fr;
-
   background-image: linear-gradient(
     to top,
     #564480,
@@ -237,13 +237,13 @@ const LeftSide = styled.section`
   display: grid;
   grid-column: 1/2;
   height: 100%;
-  /* border: 1px solid white; */
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    margin: 0px 10px;
+    /* margin: 0px 10px; */
   }
 `;
 const Center = styled.section`
@@ -322,6 +322,7 @@ const CenterDiv = styled.div`
   /* align-items: center; */
   margin: 40px;
   @media screen and (max-width: 998px) {
+    margin: 20px;
     display: flex;
     flex-direction: column;
   }
@@ -337,7 +338,8 @@ const UserIntro = styled.section`
   padding-left: 40px;
   margin-top: 10px;
   @media screen and (max-width: 1080px) {
-    width: 400px;
+    width: 100%;
+    margin: auto;
     padding: 2px;
   }
 `;
@@ -347,22 +349,24 @@ const Right = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  /* border: 1px solid black; */
   @media screen and (max-width: 1080px) {
-    width: 30%;
+    width: 100%;
   }
 `;
 const PhotoP = styled.img`
   height: 100px;
   width: 100px;
   border-radius: 50px;
+  /* border: 1px solid black; */
 `;
 const Left = styled.section`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  padding: 20px 0px;
+  /* padding: 20px 0px; */
   @media screen and (max-width: 1080px) {
-    width: 60%;
+    width: 100%;
   }
 `;
 
@@ -374,14 +378,14 @@ const Information = styled.section`
   padding-left: 10px;
   justify-content: space-between;
   padding-bottom: 5px;
-  border: 1px solid #564480;
+  border: 1px solid #2e2346;
   /* border: 1px solid #e8d5b5; */
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-
   @media screen and (max-width: 1080px) {
-    width: 60%;
+    width: 90%;
+    margin: auto;
   }
 `;
 const Title = styled.section`
@@ -398,18 +402,23 @@ const Settings = styled.section`
   display: flex;
   padding-left: 10px;
   flex-direction: column;
-  border: 1px solid #564480;
+  border: 1px solid #2e2346;
   /* border: 1px solid #e8d5b5; */
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
 
   @media screen and (max-width: 1080px) {
-    width: 60%;
+    width: 90%;
+    margin: auto;
   }
 `;
 const Content = styled.section`
-  padding-left: 10px;
+  padding-left: 2px;
+  @media screen and (max-width: 1080px) {
+    width: 90%;
+    margin: auto;
+  }
 `;
 const DContent = styled.section`
   height: 50px;
@@ -423,14 +432,20 @@ const Combined = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   row-gap: 20px;
   @media screen and (max-width: 1080px) {
-    width: 550px;
+    width: 100%;
     flex-direction: column;
   }
 `;
-const Feature = styled.div``;
+const Feature = styled.div`
+  span {
+    color: #2e2346;
+  }
+  p {
+    color: #2e2346;
+  }
+`;
 const ButtonC = styled.section`
   padding: 20px 0px;
 `;

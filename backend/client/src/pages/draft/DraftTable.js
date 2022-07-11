@@ -32,7 +32,7 @@ const DraftTable = () => {
 
   const fetchDrafts = async () => {
     const { data } = await axios.get(
-      `http://localhost:5000/api/user/project/drafts/${id}`,
+      `https://reziii.herokuapp.com/api/user/project/drafts/${id}`,
       {
         headers: {
           'content-type': 'application/json',
@@ -63,7 +63,7 @@ const DraftTable = () => {
               <NavLink to={'/drafts/table'}>DraftTable</NavLink>
             </MenuBox>
             <MenuBox>
-              <NavLink to={'/old/profile'}>Profile</NavLink>
+              <NavLink to={'/profile'}>Profile</NavLink>
             </MenuBox>
             <MenuBox>
               <NavLink to={'/apply/project'}>Apply</NavLink>

@@ -61,7 +61,7 @@ const RequestForm = () => {
     console.log('file submit');
     try {
       const { data } = await axiosJWT.post(
-        'http://localhost:5000/api/user/project/request',
+        'https://reziii.herokuapp.com/api/user/project/request',
         formData,
         {
           headers: {
@@ -84,7 +84,7 @@ const RequestForm = () => {
     console.log('save');
     try {
       const { data } = await axiosJWT.post(
-        'http://localhost:5000/api/user/project/draft',
+        'https://reziii.herokuapp.com/api/user/project/draft',
         formData,
         {
           headers: {
@@ -120,7 +120,7 @@ const RequestForm = () => {
     e.preventDefault();
     try {
       const edited = await axiosJWT.put(
-        `http://localhost:5000/api/user/project/draft/${id}`,
+        `https://reziii.herokuapp.com/api/user/project/draft/${id}`,
         draftDetail,
         {
           headers: {
@@ -141,7 +141,7 @@ const RequestForm = () => {
     e.preventDefault();
     try {
       const { data } = await axiosJWT.post(
-        `http://localhost:5000/api/user/project/draft/${id}`,
+        `https://reziii.herokuapp.com/api/user/project/draft/${id}`,
         formData,
         {
           headers: {
@@ -172,7 +172,7 @@ const RequestForm = () => {
         </Content>
 
         <FormWrapper>
-          <LoginForm onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <InputC>
               <InputField>
                 <label>First Name </label>
@@ -396,7 +396,7 @@ const RequestForm = () => {
                 </Button>
               </InputField>
             </InputC>
-          </LoginForm>
+          </Form>
         </FormWrapper>
       </Container>
       <ToastContainer
@@ -441,16 +441,24 @@ const Container = styled.div`
 const FormWrapper = styled.div`
   display: flex;
 `;
-const LoginForm = styled.form`
+const Form = styled.form`
   padding: 30px;
   background-color: #fdf7ff;
   display: flex;
   flex-direction: column;
   display: block;
   box-sizing: border-box;
+  width: 100%;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
   label {
     color: #564480;
-    string-align: left;
+  }
+  @media screen and (max-width: 998px) {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
   }
 `;
 const Button = styled.button`
@@ -478,7 +486,7 @@ const InputField = styled.section`
 `;
 const Input = styled.input`
   height: 40px;
-  padding: 10px;
+  padding: 5px;
   border-radius: 3px;
   border: none;
   background-color: white;
@@ -491,6 +499,12 @@ const Input = styled.input`
   &:focus {
     outline: 0;
     border: none;
+  }
+  @media screen and (max-width: 998px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
   }
 `;
 const Options = styled.select`
