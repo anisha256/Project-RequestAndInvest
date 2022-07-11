@@ -25,7 +25,7 @@ const createProjectDraft = asyncHandler(async (req, res) => {
   const createdBy = req.user.email;
   const linkedinProfileArray = [];
   if (linkedinProfiles) {
-    linkedinProfiles.split(',').forEach((linkedinProfile) => {
+    linkedinProfiles.forEach((linkedinProfile) => {
       linkedinProfileArray.push(linkedinProfile.trim());
     });
   }
@@ -48,6 +48,8 @@ const createProjectDraft = asyncHandler(async (req, res) => {
     user: req.user.id,
     createdBy,
   });
+  console.log(draft);
+
   const createdDraft = await draft.save();
   console.log(createdDraft.email);
   if (createdDraft) {
