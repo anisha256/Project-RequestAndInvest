@@ -56,6 +56,7 @@ const editProfile = async (req, res, next) => {
   }
   next();
 };
+
 const requestProject = async (req, res) => {
   const {
     firstName,
@@ -77,7 +78,7 @@ const requestProject = async (req, res) => {
   const createdBy = req.user.email;
   const linkedinProfileArray = [];
   if (linkedinProfiles) {
-    linkedinProfiles.split(',').forEach((linkedinProfile) => {
+    linkedinProfiles.forEach((linkedinProfile) => {
       linkedinProfileArray.push(linkedinProfile.trim());
     });
   }
@@ -100,24 +101,25 @@ const requestProject = async (req, res) => {
     user: req.user.id,
     createdBy,
   });
-
-  project.isRequested = true;
-  project.isDraft = false;
-  await project.save();
-  res.status(200).json({
-    message: 'Transaction has been submitted',
-    statusCode: 200,
-    data: project,
-  });
-  if (project) {
-    res.status(400).json({
-      status: false,
-      data: 'Transaction has already been submitted',
+  console.log(project);
+  try {
+    project.isRequested = true;
+    project.isDraft = false;
+    await project.save();
+    return res.status(200).json({
+      message: 'Transaction has been submitted',
+      statusCode: 200,
+      data: project,
     });
-  } else {
-    res.status(201).json({ success: false, ...req.body });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      statusCode: 400,
+      message: 'Object couldnot be formed',
+    });
   }
 };
+
 const uploadFile = (req, res) => {
   res.json({
     message: 'uploaded',

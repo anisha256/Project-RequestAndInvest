@@ -110,6 +110,7 @@ const RequestForm = () => {
         },
       });
       setDraftDetail(data.data);
+      setFormData(data.data);
     } catch (error) {
       console.log(error.response);
     }
@@ -120,6 +121,7 @@ const RequestForm = () => {
     try {
       const edited = await axiosJWT.put(
         `http://localhost:5000/api/user/project/draft/${id}`,
+        draftDetail,
         {
           headers: {
             'content-type': 'application/json',
@@ -132,6 +134,26 @@ const RequestForm = () => {
       toast.success('edited successfully', { autoClose: 2000 });
     } catch (error) {
       console.log(error.response);
+    }
+  };
+
+  const handleDraftSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axiosJWT.post(
+        `http://localhost:5000/api/user/project/draft/${id}`,
+        formData,
+        {
+          headers: {
+            'content-type': 'application/json',
+            access_token: localStorage.getItem('accessToken'),
+          },
+        }
+      );
+      console.log(data.data);
+      navigate('/drafts/table');
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -344,11 +366,22 @@ const RequestForm = () => {
             </InputC>
 
             <InputC>
-              <InputField>
-                <Button type="submit" onClick={handleSubmit}>
-                  Submit
-                </Button>
-              </InputField>
+              {!id && (
+                <InputField>
+                  <Button type="submit" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                </InputField>
+              )}
+
+              {id && (
+                <InputField>
+                  <Button type="submit" onClick={handleDraftSubmit}>
+                    Submit Draft
+                  </Button>
+                </InputField>
+              )}
+
               {id && (
                 <InputField>
                   <Button type="submit" onClick={handleEdit}>
