@@ -5,7 +5,6 @@ const grantProject = async (req, res) => {
   const project = await Project.findById(req.params.id);
   if (
     project.isRequested === true &&
-    project.isDraft === false &&
     project.isGranted === false &&
     project.isRejected === false
   ) {

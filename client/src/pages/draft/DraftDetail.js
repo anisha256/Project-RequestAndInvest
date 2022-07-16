@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import avatar from '../../assets/1.png';
 import axios from 'axios';
-import Spinner from '../../components/Spinner';
 import { BiEditAlt } from 'react-icons/bi';
 
 const DraftDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [detail, setDetail] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const fetchDraftDetailById = async () => {
     try {
@@ -20,7 +17,6 @@ const DraftDetail = () => {
         },
       });
       setDetail(data.data);
-      setLoading(false);
     } catch (error) {
       console.log(error.response);
     }
@@ -36,26 +32,7 @@ const DraftDetail = () => {
 
   return (
     <>
-      {loading && <Spinner />}
       <Container>
-        <LeftSide>
-          <Avatar>
-            <Avatarmenu>
-              <Photo src={avatar} />
-            </Avatarmenu>
-            <Menu>
-              <MenuBox>
-                <NavLink to={'/drafts/table'}>DraftTable</NavLink>
-              </MenuBox>
-              <MenuBox>
-                <NavLink to={'/profile'}>Profile</NavLink>
-              </MenuBox>
-              <MenuBox>
-                <NavLink to={'/apply/project'}>Apply</NavLink>
-              </MenuBox>
-            </Menu>
-          </Avatar>
-        </LeftSide>
         <Center>
           <Draft>
             <Edit onClick={() => handleEdit()}>
@@ -116,7 +93,35 @@ const DraftDetail = () => {
             </DraftContent>
           </Draft>
         </Center>
-        {/* <RightSide></RightSide> */}
+        {/* <RightSide>
+          <Title>
+            <h1>Congratulations !!!</h1>
+            <p>GRANTED PROJECTS</p>
+          </Title>
+          {grantedProjects.slice(0, 3).map((grantProject) => {
+            return (
+              <Projects key={grantProject._id}>
+                <Content>
+                  <h3>Country</h3>
+                  <p>{grantProject.country}</p>
+                </Content>
+                <Content>
+                  <h3>ProjectName</h3>
+                  <p>{grantProject.projectName}</p>
+                </Content>
+
+                <Content>
+                  <h3>Team Lead</h3>
+                  <p>
+                    {grantProject.firstName}
+                    {grantProject.lastName}
+                  </p>
+                </Content>
+              </Projects>
+            );
+          })}
+        </RightSide>
+       */}
       </Container>
     </>
   );
@@ -131,10 +136,9 @@ const Edit = styled.button`
   align-items: center;
   border-radius: 6px;
   cursor: pointer;
-  background-color: #2e2346;
+  background-color: white;
 
   &:hover {
-    background-color: white;
   }
 `;
 const DraftContent = styled.div`
@@ -155,7 +159,8 @@ const Draft = styled.div`
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-
+  width: 80%;
+  margin: auto;
   label {
     font-weight: bolder;
     font-size: 17px;
@@ -171,17 +176,15 @@ const Draft = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 400px;
+    /* min-width: 400px; */
   }
 `;
 const Center = styled.section`
   display: grid;
-  grid-column: 2/3;
-  height: 100%;
-  margin-top: 30px;
-  border-left: 1px solid white;
-  border-right: 1px solid white;
-  padding: 0px 40px;
+  grid-column: 1/2;
+  height: calc(100vh - 60px);
+  background-color: white;
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
@@ -191,108 +194,65 @@ const Center = styled.section`
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 3.5fr;
-  background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
-  );
-
+  grid-template-columns: 1fr 3.5fr 1.7fr;
+  min-height: calc(100vh - 60px);
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
   }
 `;
-const LeftSide = styled.section`
+const RightSide = styled.section`
   display: grid;
-  grid-column: 1/2;
+  grid-column: 2/3;
   height: 100%;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0px 10px;
-  }
-`;
-
-const Avatar = styled.div`
-  display: grid;
-  justify-content: center;
-  height: 150px;
-  align-items: center;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-`;
-const Photo = styled.img`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  cursor: pointer;
-`;
-const Avatarmenu = styled.div`
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+  gap: 20px;
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
   }
 `;
-const Menu = styled.div`
-  padding: 10px 0px;
+const Title = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  /* height: 100px; */
+  border-bottom: 2px solid white;
+  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   @media screen and (max-width: 998px) {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    column-gap: 10px;
+    width: 100%;
   }
 `;
-const MenuBox = styled.div`
-  height: 60px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #564480;
 
+const Projects = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid white;
+  padding: 20px;
+  background-color: #fffade;
+  height: 200px;
   @media screen and (max-width: 998px) {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;
+    border-radius: 10px;
   }
 `;
-// const RightSide = styled.section`
-//   display: grid;
-//   grid-column: 3/4;
-//   height: 100px;
-//   gap: 20px;
-//   @media screen and (max-width: 998px) {
-//     display: flex;
-//     flex-direction: column;
-//   }
-// `;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  p {
+    color: #564480;
+  }
+`;

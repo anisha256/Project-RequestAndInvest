@@ -15,6 +15,8 @@ const Photo1 = styled.img``;
 
 const HomeContainer = styled.div`
   flex: 4;
+  min-height: calc(100vh - 60px);
+
   /* background-image: linear-gradient(
     to top,
     #564480,

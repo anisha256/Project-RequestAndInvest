@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
 const FormContainer = styled.section`
@@ -124,29 +124,30 @@ const Form = () => {
               value={formData.phone}
             />
           </InputC>
-          {/* <InputC>
-          <label>Content</label>
+          <InputC>
+            <label>Content</label>
 
-          <CKEditor
-            config={{
-              ckfinder: {
-                uploadUrl: 'http://localhost:5000/api/file/upload',
-              },
-            }}
-            editor={Editor}
-            onReady={() => {
-              console.log('Editor is ready to use!');
-            }}
-            onChange={handleCkeditorState}
-          />
-        </InputC>
-         */}
+            <CKEditor
+              config={{
+                ckfinder: {
+                  uploadUrl: 'http://localhost:5000/api/file/upload',
+                },
+              }}
+              data={data}
+              editor={ClassicEditor}
+              onReady={() => {
+                console.log('Editor is ready to use!');
+              }}
+              onChange={handleCkeditorState}
+            />
+          </InputC>
+
           <InputC>
             <Button type="submit">Submit</Button>
           </InputC>
         </ContactForm>
       </FormContainer>
-      <section>
+      {/* <section>
         <CKEditor
           config={{
             ckfinder: {
@@ -159,7 +160,7 @@ const Form = () => {
           }}
           onChange={handleCkeditorState}
         />
-      </section>
+      </section> */}
     </>
   );
 };

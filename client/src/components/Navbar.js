@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [showMediaIcon, setSetMediaIcon] = useState(false);
   const handleLogin = () => {
-    navigate('/login');
+    navigate('/');
   };
   const handleRegister = () => {
     navigate('/register');
@@ -39,17 +39,12 @@ const Navbar = () => {
           </h2>
         </NavLeft>
         <NavCenter>
-          {userExists() && <NavLink to="/feed">Feed</NavLink>}
-
-          {userExists() ? (
-            <NavLink to="/apply/project">Apply</NavLink>
-          ) : (
-            <NavLink to="/">Home</NavLink>
-          )}
+          {userExists() && <NavLink to="/drafts/table">Drafts</NavLink>}
+          {userExists() && <NavLink to="/apply/project">Apply</NavLink>}
+          {userExists() && <NavLink to="/profile">Profile</NavLink>}
         </NavCenter>
         <NavRight>
           {userExists() ? (
-            // <Button onClick={logoutUser}>Logout</Button>
             <Button onClick={handleLogout}>Logout</Button>
           ) : (
             <Button onClick={handleLogin}>Login</Button>
@@ -61,17 +56,13 @@ const Navbar = () => {
           {showMediaIcon && (
             <MobileMenu>
               {userExists() && (
-                <NavLink to="/feed">
-                  <Div>Feed</Div>
-                </NavLink>
-              )}
-              {userExists() ? (
                 <NavLink to="/apply/project">
                   <Div>Apply</Div>
                 </NavLink>
-              ) : (
-                <NavLink to="/">
-                  <Div>Home</Div>
+              )}
+              {userExists() && (
+                <NavLink to="/drafts/table">
+                  <Div>Drafts</Div>
                 </NavLink>
               )}
               {userExists() && (
@@ -86,7 +77,6 @@ const Navbar = () => {
                 {!userExists() ? (
                   <Button onClick={handleLogin}>Login</Button>
                 ) : (
-                  // <Button onClick={logoutUser}>Logout</Button>
                   <Button onClick={handleLogout}>Logout</Button>
                 )}
               </ButtonDiv>
@@ -132,7 +122,7 @@ const NavRight = styled.div`
   }
 `;
 const Div = styled.div`
-  background-color: #9e7fe8;
+  background-color: #5b0e71;
   border: none;
   color: #fdf7ff;
   height: 30px;
@@ -174,7 +164,7 @@ const Hambuger = styled.div`
     grid-column: 4/5;
     align-items: center;
     justify-content: flex-end;
-    color: #564480;
+    color: black;
     cursor: pointer;
   }
 `;
@@ -203,7 +193,7 @@ const MobileMenu = styled.div`
   color: rgba(252, 247, 255, 0.63);
 `;
 const Button = styled.button`
-  background-color: #9e7fe8;
+  background-color: #5b0e71;
   border: none;
   color: #fdf7ff;
   height: 30px;

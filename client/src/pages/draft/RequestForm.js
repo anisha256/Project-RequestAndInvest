@@ -98,6 +98,7 @@ const RequestForm = () => {
       setFormData(res);
       console.log('form submitted');
       toast.success(' Saved as Draft', { autoClose: 2000 });
+      navigate('/drafts/table');
     } catch (error) {
       console.log(error);
     }
@@ -172,7 +173,7 @@ const RequestForm = () => {
         </Content>
 
         <FormWrapper>
-          <LoginForm onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit}>
             <InputC>
               <InputField>
                 <label>First Name </label>
@@ -378,7 +379,7 @@ const RequestForm = () => {
               {id && (
                 <InputField>
                   <Button type="submit" onClick={handleDraftSubmit}>
-                    Submit Draft
+                    Submit
                   </Button>
                 </InputField>
               )}
@@ -396,7 +397,7 @@ const RequestForm = () => {
                 </Button>
               </InputField>
             </InputC>
-          </LoginForm>
+          </Form>
         </FormWrapper>
       </Container>
       <ToastContainer
@@ -416,46 +417,49 @@ const RequestForm = () => {
 
 export default RequestForm;
 const Container = styled.div`
-  color: #564480;
-  /* min-height: 100vh; */
+  color: black;
+  top: 0;
+  min-height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
+    to right bottom,
+    #f9e7fe,
+    #ffe6f3,
+    #ffe7e6,
+    #ffeadd,
+    #fdefda
   );
 `;
 const FormWrapper = styled.div`
   display: flex;
 `;
-const LoginForm = styled.form`
+const Form = styled.form`
   padding: 30px;
   background-color: #fdf7ff;
   display: flex;
   flex-direction: column;
   display: block;
   box-sizing: border-box;
+  width: 800px;
+  padding-bottom: 20px;
+  margin-bottom: 50px;
   label {
-    color: #564480;
-    string-align: left;
+    color: black;
+  }
+  @media screen and (max-width: 998px) {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 40px;
   }
 `;
 const Button = styled.button`
   padding: 5px 10px;
-  background-color: #564480;
+  background-color: black;
   border: none;
   border-radius: 5px;
   height: 40px;
@@ -464,6 +468,13 @@ const Button = styled.button`
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
+  @media screen and (max-width: 998px) {
+    display: flex;
+    height: 30px;
+    width: 80px;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 const InputC = styled.section`
   display: flex;
@@ -475,14 +486,21 @@ const InputField = styled.section`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding-bottom: 30px;
+  label {
+    font-size: 20px;
+    padding-bottom: 5px;
+  }
 `;
 const Input = styled.input`
-  height: 40px;
-  padding: 10px;
+  height: 50px;
+  padding: 5px;
   border-radius: 3px;
   border: none;
   background-color: white;
-  color: #564480;
+  color: black;
+  font-size: 18px;
+
   &:active {
     outline: none;
     border: none;
@@ -492,14 +510,21 @@ const Input = styled.input`
     outline: 0;
     border: none;
   }
+  @media screen and (max-width: 998px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+  }
 `;
 const Options = styled.select`
-  height: 40px;
+  height: 0px;
   padding: 10px;
   border-radius: 3px;
   border: none;
   background-color: white;
-  color: #564480;
+  color: black;
+  font-size: 18px;
   &:active {
     outline: none;
     border: none;
@@ -516,7 +541,7 @@ const Textarea = styled.textarea`
   border-radius: 3px;
   border: none;
   background-color: white;
-  color: #564480;
+  color: black;
   &:active {
     outline: none;
     border: none;

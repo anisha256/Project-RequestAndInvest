@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import login from '../../assets/login.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const Login = () => {
 
       handleRefreshToken();
       toast.success('login successful', { autoClose: 2000 });
-      navigate('/feed');
+      navigate('/profile');
     } catch (error) {
       toast.error('Invalid Credentials', { autoClose: 2000 });
     }
@@ -79,35 +80,40 @@ const Login = () => {
     <>
       <Container>
         <FormWrapper>
-          <LoginForm onSubmit={handleSubmit}>
+          <Left>
+            <Photo src={login} />
+          </Left>
+          <Right>
             <h2>Login</h2>
 
-            <InputC>
-              <label>Email</label>
-              <Input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter the email"
-                value={loginData.email}
-                onChange={handleChange}
-              />
-            </InputC>
-            <InputC>
-              <label>Password</label>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter the password"
-                value={loginData.password}
-                onChange={handleChange}
-              />
-            </InputC>
-            <InputC>
-              <Button type="submit">Login</Button>
-            </InputC>
-          </LoginForm>
+            <LoginForm onSubmit={handleSubmit}>
+              <InputC>
+                <label>Email</label>
+                <Input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Enter the email"
+                  value={loginData.email}
+                  onChange={handleChange}
+                />
+              </InputC>
+              <InputC>
+                <label>Password</label>
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="Enter the password"
+                  value={loginData.password}
+                  onChange={handleChange}
+                />
+              </InputC>
+              <InputC>
+                <Button type="submit">Login</Button>
+              </InputC>
+            </LoginForm>
+          </Right>
         </FormWrapper>
         <ToastContainer
           position="top-right"
@@ -126,6 +132,7 @@ const Login = () => {
 };
 
 export default Login;
+
 const Container = styled.div`
   color: #564480;
   min-height: 100vh;
@@ -134,62 +141,99 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
+    to right bottom,
+    #f9e7fe,
+    #ffe6f3,
+    #ffe7e6,
+    #ffeadd,
+    #fdefda
   );
 `;
 const FormWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 60%;
+  background-color: white;
+  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  @media screen and (max-width: 998px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 `;
-const LoginForm = styled.form`
-  /* height: 300px;
-  width: 400px; */
-  padding: 20px;
-  background-color: #fdf7ff;
+const Left = styled.div`
+  display: flex;
+  flex: 1;
+  @media screen and (max-width: 998px) {
+    padding: 40px;
+  }
+`;
+const Right = styled.div`
+  flex: 1.5;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  padding: 40px;
+
+  h2 {
+    color: black;
+    padding-top: 40px;
+  }
+  @media screen and (max-width: 998px) {
+    width: 100%;
+    h2 {
+      color: black;
+      padding-top: 10px;
+    }
+  }
+`;
+const Photo = styled.img`
+  width: 100%;
+  display: flex;
+  object-fit: cover;
+`;
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 30px;
+  width: 100%;
   label {
-    color: #564480;
-    display: inline-block;
-    text-align: left;
+    color: black;
+    font-size: 20px;
+    padding-bottom: 10px;
   }
 `;
 const Button = styled.button`
   padding: 5px 10px;
-  background-color: #564480;
+  background-color: black;
   border: none;
   border-radius: 5px;
-  height: 40px;
-  width: 100px;
+  height: 50px;
+  width: 150px;
   color: white;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+  @media screen and (max-width: 998px) {
+  }
 `;
 const InputC = styled.section`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 const Input = styled.input`
-  height: 45px;
-  width: 350px;
+  height: 60px;
+  font-size: 18px;
+  width: 100%;
   padding: 10px;
   border-radius: 3px;
   border: none;
@@ -203,5 +247,9 @@ const Input = styled.input`
   &:focus {
     outline: 0;
     border: none;
+  }
+  @media screen and (max-width: 998px) {
+    /* width: 350px; */
+    height: 50px;
   }
 `;

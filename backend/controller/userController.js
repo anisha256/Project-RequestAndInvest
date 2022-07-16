@@ -12,13 +12,13 @@ const getProfiles = async (req, res, next) => {
   } catch (error) {
     res.status(404).json({
       status: false,
-      message: error.message,
+      message: 'not found',
     });
   }
   next();
 };
 
-const getProfileById = async (req, res, next) => {
+const getProfileById = async (req, res) => {
   try {
     const profile = await User.findById(req.params.id);
     res.status(200).json({
@@ -29,10 +29,9 @@ const getProfileById = async (req, res, next) => {
   } catch (error) {
     res.status(404).json({
       status: false,
-      message: error.message,
+      message: 'Not found',
     });
   }
-  next();
 };
 
 const editProfile = async (req, res, next) => {

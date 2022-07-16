@@ -15,7 +15,6 @@ export const axiosJWT = axios.create();
 const Profile = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(localStorage.getItem('username'));
-  const [data, setData] = useState('');
   const [grantedProjects, setGrantedProjects] = useState([]);
   const id = getUserId();
   const [profileData, setProfileData] = useState([]);
@@ -24,30 +23,25 @@ const Profile = () => {
 
   const access_token = localStorage.getItem('accessToken');
 
-  axiosJWT.interceptors.response.use(
-    async (config) => {
-      const user = jwt_decode(localStorage.getItem('accessToken'));
-      const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-      console.log(isExpired);
-      if (!isExpired) return config;
-      const { data } = await axios.get('http://localhost:5000/api/refresh', {
-        headers: {
-          'content-type': 'application/json',
-          refresh_token: localStorage.getItem('refreshToken'),
-        },
-      });
-      const { accessToken } = data.data;
-      console.log('newaccessToken', accessToken);
-      localStorage.setItem('accessToken', accessToken);
+  axiosJWT.interceptors.response.use(async (config) => {
+    const user = jwt_decode(localStorage.getItem('accessToken'));
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+    console.log(isExpired);
+    if (!isExpired) return config;
+    const { data } = await axios.get('http://localhost:5000/api/refresh', {
+      headers: {
+        'content-type': 'application/json',
+        refresh_token: localStorage.getItem('refreshToken'),
+      },
+    });
+    const { accessToken } = data.data;
+    console.log('newaccessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken);
 
-      config.headers.access_token = accessToken;
+    config.headers.access_token = accessToken;
 
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+    return config;
+  });
   const getProfileData = async () => {
     console.log('getprofile api');
     try {
@@ -109,33 +103,14 @@ const Profile = () => {
 
   return (
     <Container>
-      <LeftSide>
-        <Avatar>
-          <Avatarmenu>
-            <Photo src={avatar} />
-            <p>{user}</p>
-          </Avatarmenu>
-          <Menu>
-            <MenuBox>
-              <NavLink to={'/drafts/table'}>DraftTable</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/profile'}>Profile</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/apply/project'}>Apply</NavLink>
-            </MenuBox>
-          </Menu>
-        </Avatar>
-      </LeftSide>
       <Center>
         <CenterDiv>
           <UserIntro>
             <Left>
-              <h1>User</h1>
-              <span>{profileData.email}</span>
+              <h1 style={{ color: '#2e2346' }}>User</h1>
+              <span style={{ color: '#2e2346' }}>{profileData.email}</span>
 
-              <span>
+              <span style={{ color: '#2e2346' }}>
                 joined on{' '}
                 {profileData.createdAt
                   ? `${profileData.createdAt.slice(0, 10)}`
@@ -147,14 +122,14 @@ const Profile = () => {
             </Right>
           </UserIntro>
           <Content>
-            <h1>Profile</h1>
-            <p>Your personal information</p>
+            <h1 style={{ color: '#2e2346' }}>Profile</h1>
+            <p style={{ color: '#2e2346' }}>Your personal information</p>
           </Content>
           <Combined>
             <Information>
               <Title>
-                <h1>Personal Information</h1>
-                <Edit onClick={handleEdit}>
+                <h1 style={{ color: '#2e2346' }}>Personal Information</h1>
+                <Edit onClick={handleEdit} style={{ color: '#2e2346' }}>
                   <FaUserEdit />
                 </Edit>
               </Title>
@@ -182,11 +157,13 @@ const Profile = () => {
 
             <Settings>
               <DContent>
-                <h1>Deactivate User</h1>
+                <h1 style={{ color: '#2e2346' }}>Deactivate User</h1>
               </DContent>
 
               <ButtonC>
-                <p>You can deactivate ur account</p>
+                <p style={{ color: '#2e2346' }}>
+                  You can deactivate ur account
+                </p>
 
                 <Button onClick={handleDeactivate}>Deactivate</Button>
               </ButtonC>
@@ -207,121 +184,38 @@ const Profile = () => {
 };
 
 export default Profile;
-const Container = styled.div`
-  min-height: 100vh;
-  display: grid;
-  /* grid-template-columns: 1fr 5.95fr; */
-  grid-template-columns: 1fr 3.5fr 1.7fr;
 
+const Container = styled.div`
+  display: grid;
+  min-height: calc(100vh - 60px);
+  grid-template-columns: 1fr 3.5fr 1.7fr;
   background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
+    to right bottom,
+    #f9e7fe,
+    #ffe6f3,
+    #ffe7e6,
+    #ffeadd,
+    #fdefda
   );
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
   }
 `;
-const LeftSide = styled.section`
-  display: grid;
-  grid-column: 1/2;
-  height: 100%;
-  /* border: 1px solid white; */
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0px 10px;
-  }
-`;
+
 const Center = styled.section`
   display: grid;
-  grid-column: 2/3;
+  grid-column: 1/3;
   height: 100%;
-  border-left: 1px solid white;
-  border-right: 1px solid white;
-`;
-
-const Avatar = styled.div`
-  display: grid;
-  justify-content: center;
-  height: 150px;
-  align-items: center;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-`;
-const Photo = styled.img`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  cursor: pointer;
-`;
-const Avatarmenu = styled.div`
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-`;
-const Menu = styled.div`
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 20px;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    column-gap: 10px;
-  }
-`;
-const MenuBox = styled.div`
-  height: 60px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #564480;
-
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-  }
 `;
 
 const CenterDiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
   margin: 40px;
+  row-gap: 40px;
   @media screen and (max-width: 998px) {
+    margin: 20px;
     display: flex;
     flex-direction: column;
   }
@@ -329,16 +223,15 @@ const CenterDiv = styled.div`
 const UserIntro = styled.section`
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  font-size: 20px;
   height: 200px;
-  width: 700px;
-  /* border: 1px solid lightgray; */
-  padding-left: 40px;
-  margin-top: 10px;
-  @media screen and (max-width: 1080px) {
-    width: 400px;
-    padding: 2px;
+  width: 40%;
+  padding-left: 20px;
+  @media screen and (max-width: 998px) {
+    width: 90%;
+    margin: auto;
   }
 `;
 const Right = styled.section`
@@ -347,22 +240,26 @@ const Right = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  @media screen and (max-width: 1080px) {
-    width: 30%;
+  /* border: 1px solid black; */
+  @media screen and (max-width: 998px) {
+    width: 100%;
   }
 `;
 const PhotoP = styled.img`
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   border-radius: 50px;
+  /* border: 1px solid black; */
 `;
 const Left = styled.section`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  padding: 20px 0px;
-  @media screen and (max-width: 1080px) {
-    width: 60%;
+  width: 100%;
+
+  @media screen and (max-width: 998px) {
+    width: 100%;
+    padding-left: 0px;
   }
 `;
 
@@ -374,48 +271,58 @@ const Information = styled.section`
   padding-left: 10px;
   justify-content: space-between;
   padding-bottom: 5px;
-  border: 1px solid #564480;
-  /* border: 1px solid #e8d5b5; */
+  background-color: #fdf7ff;
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-
-  @media screen and (max-width: 1080px) {
-    width: 60%;
+  @media screen and (max-width: 998px) {
+    width: 90%;
+    margin: auto;
   }
 `;
 const Title = styled.section`
   height: 50px;
   display: flex;
+  font-size: 20px;
   align-items: center;
-  border-bottom: 2px solid #564480;
-  /* border-bottom: 2px solid #e8d5b5; */
+  border-bottom: 3px solid black;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
 const Settings = styled.section`
   display: flex;
-  padding-left: 10px;
   flex-direction: column;
-  border: 1px solid #564480;
-  /* border: 1px solid #e8d5b5; */
   box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  p {
+    font-size: 20px;
+    padding-bottom: 10px;
+  }
 
-  @media screen and (max-width: 1080px) {
-    width: 60%;
+  @media screen and (max-width: 998px) {
+    width: 90%;
+    margin: auto;
   }
 `;
 const Content = styled.section`
+  font-size: 20px;
   padding-left: 10px;
+  @media screen and (max-width: 998px) {
+    width: 87%;
+    margin: auto;
+    padding-left: 5px;
+  }
 `;
 const DContent = styled.section`
+  font-size: 20px;
   height: 50px;
   display: flex;
   align-items: center;
-  border-bottom: 2px solid #1a102f;
+  border-bottom: 3px solid #1a102f;
+  background-color: #fdf7ff;
+  padding-left: 10px;
   /* border-bottom: 2px solid #e8d5b5; */
 `;
 const Combined = styled.div`
@@ -423,16 +330,26 @@ const Combined = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  row-gap: 20px;
-  @media screen and (max-width: 1080px) {
-    width: 550px;
+  row-gap: 70px;
+  @media screen and (max-width: 998px) {
+    width: 100%;
     flex-direction: column;
   }
 `;
-const Feature = styled.div``;
+const Feature = styled.div`
+  span {
+    color: #2e2346;
+    font-size: 20px;
+  }
+  p {
+    color: #2e2346;
+    font-size: 18px;
+  }
+`;
 const ButtonC = styled.section`
   padding: 20px 0px;
+  background-color: #fdf7ff;
+  padding-left: 10px;
 `;
 const Button = styled.button`
   padding: 5px 10px;
@@ -442,7 +359,8 @@ const Button = styled.button`
   height: 40px;
   width: 100px;
   color: white;
-  font-size: 15px;
+  font-size: 18px;
+  font-weight: bolder;
   cursor: pointer;
 `;
 const Edit = styled.section`

@@ -13,7 +13,7 @@ import {
   Paper,
 } from '@mui/material';
 import Spinner from '../../components/Spinner';
-
+import celebrate from '../../assets/celebrate.png';
 const DraftTable = () => {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
@@ -29,7 +29,24 @@ const DraftTable = () => {
   const [draftLists, setDraftLists] = useState([]);
   const id = localStorage.getItem('_id');
   const [loading, setLoading] = useState(true);
+  const [grantedProjects, setGrantedProjects] = useState([]);
 
+  const fetchGrantedProjects = async () => {
+    try {
+      const { data } = await axios.get(
+        'http://localhost:5000/api/admin/project/lists/accepted',
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+      );
+      console.log(data.data);
+      setGrantedProjects(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchDrafts = async () => {
     const { data } = await axios.get(
       `http://localhost:5000/api/user/project/drafts/${id}`,
@@ -51,37 +68,56 @@ const DraftTable = () => {
   };
   useEffect(() => {
     fetchDrafts();
+    fetchGrantedProjects();
   }, []);
 
   return (
     <Container>
-      <LeftSide>
-        <Avatar>
-          <Avatarmenu></Avatarmenu>
-          <Menu>
-            <MenuBox>
-              <NavLink to={'/drafts/table'}>DraftTable</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/old/profile'}>Profile</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/apply/project'}>Apply</NavLink>
-            </MenuBox>
-          </Menu>
-        </Avatar>
-      </LeftSide>
       <Center>
+        <Top>
+          <Title>
+            <Celebrate src={celebrate} />
+          </Title>
+          {grantedProjects.slice(0, 3).map((grantProject) => {
+            return (
+              <Projects key={grantProject._id}>
+                <Content>
+                  <h3>Country</h3>
+                  <p>{grantProject.country}</p>
+                </Content>
+                <Content>
+                  <h3>ProjectName</h3>
+                  <p>{grantProject.projectName}</p>
+                </Content>
+
+                {/* <Content>
+                  <h3>Team Lead</h3>
+                  <p>
+                    {grantProject.firstName}
+                    {grantProject.lastName}
+                  </p>
+                </Content> */}
+              </Projects>
+            );
+          })}
+        </Top>
+
         {loading && <Spinner />}
         {!loading && (
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer
-            //  sx={{ maxHeight: 600 }}
-            >
+            <TableContainer sx={{ maxHeight: 600 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left" style={{ minWidth: 20 }}>
+                    <TableCell
+                      align="left"
+                      style={{
+                        minWidth: 20,
+                        backgroundColor: '#5B0E71',
+                        color: 'white',
+                        fontWeight: 'bold',
+                      }}
+                    >
                       ProjectsName
                     </TableCell>
                     <TableCell align="left" style={{ minWidth: 20 }}>
@@ -113,7 +149,12 @@ const DraftTable = () => {
                           <TableCell
                             align="left"
                             onClick={() => handleTogetDetail(row._id)}
-                            style={{ cursor: 'pointer', color: 'blue' }}
+                            style={{
+                              cursor: 'pointer',
+                              color: 'white',
+                              fontWeight: 'bold',
+                              backgroundColor: '#5B0E71',
+                            }}
                           >
                             {row.projectName}
                           </TableCell>
@@ -150,158 +191,86 @@ const DraftTable = () => {
 
 export default DraftTable;
 const Container = styled.div`
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 3.5fr 1.7fr;
-  background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
-  );
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  margin-left: 60px;
+  width: 100%;
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    margin: auto;
+    padding: 20px;
   }
 `;
-const LeftSide = styled.section`
-  display: grid;
-  grid-column: 1/2;
-  height: 100%;
-  /* border: 1px solid white; */
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0px 10px;
-  }
-`;
+
 const Center = styled.section`
-  display: grid;
-  grid-column: 2/3;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  border-left: 1px solid white;
-  border-right: 1px solid white;
+  row-gap: 40px;
 `;
-
-const Avatar = styled.div`
-  display: grid;
-  justify-content: center;
-  height: 150px;
-  align-items: center;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-`;
-const Avatarmenu = styled.div`
-  padding: 10px 0px;
+const Top = styled.section`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-`;
-const Menu = styled.div`
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  background-color: white;
+  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
   row-gap: 20px;
   @media screen and (max-width: 998px) {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    column-gap: 10px;
-  }
-`;
-const MenuBox = styled.div`
-  height: 60px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #564480;
-
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-  }
-`;
-const RightSide = styled.section`
-  display: grid;
-  grid-column: 3/4;
-  height: 100%;
-  gap: 20px;
-  @media screen and (max-width: 998px) {
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding-bottom: 40px;
+    width: 100%;
   }
 `;
-const CenterDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
-  margin: 40px;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: column;
-  }
-`;
-
 const Title = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 100px; */
+  padding: 20px;
+  flex: 1;
   border-bottom: 2px solid white;
-  box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-  -webkit-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
-  -moz-box-shadow: 10px 10px 24px -7px rgba(46, 38, 64, 0.3);
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* width: 100%; */
   }
+`;
+const Celebrate = styled.img`
+  height: 200px;
+  object-fit: cover;
+  /* border: 1px solid black; */
 `;
 
 const Projects = styled.div`
   display: flex;
+  flex: 2;
+  height: 50%;
   flex-direction: column;
-  border: 1px solid white;
+  justify-content: center;
   padding: 20px;
-  background-color: #fffade;
-  height: 200px;
+  p {
+    color: black;
+    font-size: 20px;
+  }
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    width: 80%;
+    border-radius: 10px;
   }
 `;
 
@@ -309,6 +278,6 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   p {
-    color: #564480;
+    font-size: 20px;
   }
 `;

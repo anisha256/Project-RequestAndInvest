@@ -36,25 +36,6 @@ const Feed = () => {
 
   return (
     <Container>
-      <LeftSide>
-        <Avatar>
-          <Avatarmenu>
-            <Photo src={avatar} />
-            <p>{user}</p>
-          </Avatarmenu>
-          <Menu>
-            <MenuBox>
-              <NavLink to={'/drafts/table'}>DraftTable</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/profile'}>Profile</NavLink>
-            </MenuBox>
-            <MenuBox>
-              <NavLink to={'/apply/project'}>Apply</NavLink>
-            </MenuBox>
-          </Menu>
-        </Avatar>
-      </LeftSide>
       <Center>
         <CenterDiv>
           {/* <CKEditor
@@ -84,37 +65,6 @@ const Feed = () => {
           </CenterPost> */}
         </CenterDiv>
       </Center>
-      <RightSide>
-        <Title>
-          <h1>Congratulations !!!</h1>
-          <p>GRANTED PROJECTS</p>
-        </Title>
-        {grantedProjects
-          .reverse()
-          .slice(0, 3)
-          .map((grantProject) => {
-            return (
-              <Projects key={grantProject._id}>
-                <Content>
-                  <h3>Country</h3>
-                  <p>{grantProject.country}</p>
-                </Content>
-                <Content>
-                  <h3>ProjectName</h3>
-                  <p>{grantProject.projectName}</p>
-                </Content>
-
-                <Content>
-                  w<h3>Team Lead</h3>
-                  <p>
-                    {grantProject.firstName}
-                    {grantProject.lastName}
-                  </p>
-                </Content>
-              </Projects>
-            );
-          })}
-      </RightSide>
     </Container>
   );
 };
@@ -124,105 +74,25 @@ const Container = styled.div`
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 3.5fr 1.7fr;
-  background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
-  );
+
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
   }
 `;
-const LeftSide = styled.section`
-  display: grid;
-  grid-column: 1/2;
-  height: 100%;
-  /* border: 1px solid white; */
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0px 10px;
-  }
-`;
+
 const Center = styled.section`
   display: grid;
-  grid-column: 2/3;
+  grid-column: 1/3;
   height: 100%;
-  border-left: 1px solid white;
-  border-right: 1px solid white;
 `;
-
-const Avatar = styled.div`
-  display: grid;
-  justify-content: center;
-  height: 150px;
-  align-items: center;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-`;
-const Photo = styled.img`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  cursor: pointer;
-`;
-const Avatarmenu = styled.div`
-  padding: 10px 0px;
+const CenterDiv = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
+  margin: 40px;
   @media screen and (max-width: 998px) {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-`;
-const Menu = styled.div`
-  padding: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  row-gap: 20px;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    column-gap: 10px;
-  }
-`;
-const MenuBox = styled.div`
-  height: 60px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #564480;
-
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: row;
   }
 `;
 const RightSide = styled.section`
@@ -235,15 +105,6 @@ const RightSide = styled.section`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-`;
-const CenterDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 40px;
-  @media screen and (max-width: 998px) {
-    display: flex;
-    flex-direction: column;
   }
 `;
 
@@ -262,6 +123,7 @@ const Title = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
   }
 `;
 
@@ -276,7 +138,9 @@ const Projects = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    width: 80%;
+    border-radius: 10px;
   }
 `;
 

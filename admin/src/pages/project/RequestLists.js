@@ -83,7 +83,7 @@ const RequestLists = () => {
         }
       );
       setLoading(false);
-      toast.success('Project is Accepted', { autoClose: 2000 });
+      toast.success('Project is Rejected', { autoClose: 2000 });
     } catch (error) {
       console.log(error.response.data);
     }
@@ -195,17 +195,6 @@ const RequestLists = () => {
           </Paper>
         )}
       </ProjectsContainer>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   );
 };
@@ -227,21 +216,7 @@ const Button = styled.button`
 
 const ProjectsContainer = styled.div`
   flex: 4;
-  background-image: linear-gradient(
-    to top,
-    #564480,
-    #634f93,
-    #705aa6,
-    #7d65b9,
-    #8b70cd,
-    #9b7ed8,
-    #ab8ce2,
-    #bb9bed,
-    #ceb1f1,
-    #dfc8f5,
-    #eedffa,
-    #fcf7ff
-  );
+  min-height: calc(100vh - 60px);
 `;
 
 const CopyButton = styled.button`

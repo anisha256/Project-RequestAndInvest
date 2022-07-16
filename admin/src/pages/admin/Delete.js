@@ -86,6 +86,8 @@ const DeleteWrapper = styled.div`
 
 const DeleteContainer = styled.div`
   flex: 4;
+  min-height: calc(100vh - 60px);
+
   background-image: linear-gradient(
     to top,
     #564480,

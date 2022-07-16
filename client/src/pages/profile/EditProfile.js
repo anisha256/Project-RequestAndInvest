@@ -92,7 +92,7 @@ const MainPopup = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 300;
+  z-index: 200;
   width: 100%;
   position: absolute;
   justify-content: center;
@@ -107,11 +107,11 @@ const Popup = styled.div`
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  height: 35vh;
   width: 400px;
   border: 1px solid black;
   margin-top: 25%;
-  background-color: #fdf7ff;
+  background-color: white;
   border-radius: 8px;
   border: none;
   h1 {
